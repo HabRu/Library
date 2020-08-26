@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Library.Controllers
 {
-    [EnableCors("AllowAllOrigin")]
     public class HomeController : Controller
     {
         ApplicationContext db;

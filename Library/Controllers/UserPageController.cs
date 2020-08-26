@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+
 namespace Library.Controllers
 {
     [Authorize]
@@ -20,8 +22,7 @@ namespace Library.Controllers
         }
         public IActionResult MyPage()
         {
-            User user =db.Users.FirstOrDefault(p=>p.Id==_userManager.GetUserId(User));
-            user.ReservUser = db.Reservations.Where(p => p.User == user).ToList();
+            User user =db.Users.Include(u=>u.ReservUser).FirstOrDefault(p=>p.Id==_userManager.GetUserId(User));
             return View(user);
         }
     }

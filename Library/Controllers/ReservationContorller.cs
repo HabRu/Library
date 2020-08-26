@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 namespace Library.Controllers
 {
   
@@ -23,8 +22,8 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> Refuse(int? id)
         {
-            Reservation reservation = db.Reservations.FirstOrDefault(p => p.Id == id);
-            User user = db.Users.FirstOrDefault(p => p.Id == reservation.UserId);
+            Reservation reservation = db.Reservations.Include(r=>r.User).FirstOrDefault(p => p.Id == id);
+            User user = reservation.User;
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
             if (User.IsInRole("librarian") || User.Identity.Name == user.Email)
             {
