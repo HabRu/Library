@@ -1,0 +1,41 @@
+﻿@model Library.ViewModels.EditBookViewModel
+@{
+    ViewBag.Title = "Редактирование книги";
+}
+<form asp-action="Edit" asp-controller="Book">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <input type="hidden" asp-for="Title" />
+    </div>
+    <div class="form-group">
+        <img style="border:dashed; color:red" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Image))" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Authtor" class="control-label">Автор</label>
+        <input type="text" asp-for="Authtor" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Year" class="control-label">Год</label>
+        <input type="number" asp-for="Year" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Language" class="control-label">Язык</label>
+        <input type="text" asp-for="Language" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Genre" class="control-label">Жанр</label>
+        <input type="text" asp-for="Genre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Publisher" class="control-label">Издатель</label>
+        <input type="text" asp-for="Publisher" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Описание</label>
+       <textarea asp-for="Description" class="form-control" ></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Сохранить" class="btn btn-default" />
+    </div>
+</form>
+

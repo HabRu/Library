@@ -1,0 +1,57 @@
+﻿@model Library.ViewModels.AddBookViewModel
+@{
+    ViewData["Title"] = "AddBook";
+}
+<style>
+    .register {
+        background-color: white;
+        height: auto;
+        margin-top: 2%;
+        padding-bottom: 2%;
+        border-radius: 30px;
+    }
+</style>
+<div class="row">
+    
+    <div class="container  col-md-4 col-md-push-4 register  center-block register ">
+        <h2>Добавить новую книгу</h2>
+        <form method="post" asp-action="AddBook" enctype="multipart/form-data">
+            <div>
+                <label asp-for="Title"></label><br />
+                <input class="form-control" asp-for="Title" />
+            </div>
+            <div>
+                <label asp-for="Year"></label><br />
+                <input class="form-control" asp-for="Year" />
+                <span asp-validation-for="Year"></span>
+            </div>
+            <div>
+                <label asp-for="Language"></label><br />
+                <input class="form-control" asp-for="Language" />
+                <span asp-validation-for="Language"></span>
+            </div>
+            <div>
+                <label asp-for="Genre"></label><br />
+                <input class="form-control" asp-for="Genre" />
+                <span asp-validation-for="Genre"></span>
+            </div>
+            <div>
+                <label asp-for="Authtor"></label><br />
+                <input class="form-control" asp-for="Authtor" />
+                <span asp-validation-for="Authtor"></span>
+            </div>
+            <div>
+                <label asp-for="Publisher"></label><br />
+                <input class="form-control" asp-for="Publisher" />
+                <span asp-validation-for="Publisher"></span>
+            </div>
+            <div>
+                <div>
+                    <label asp-for="Image">Обложка</label><br />
+                    <input name="Image" type="file" class="form-control" />
+                </div>
+                <input type="submit" class="btn btn-primary" value="Добваить" />
+            </div>
+    </form>
+  </div>
+   </div>

@@ -1,0 +1,49 @@
+﻿@model Library.ViewModels.UserRegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+<style>
+   .register{
+       background-color:white;
+       height:auto;
+       margin-top:2%;
+       padding-bottom:2%;
+       border-radius:30px;
+   }
+</style>
+<div class="row">
+    <div class="container  col-md-4 col-md-push-4 register  center-block register ">
+        <h2>Регистрация нового пользователя</h2>
+        <form method="post" asp-action="Register" asp-controller="Account">
+            <div style="color:red" asp-validation-summary="ModelOnly"></div>
+            <div>
+                <label asp-for="Email"></label><br />
+                <input class="form-control" asp-for="Email" />
+                <span asp-validation-for="Email"></span>
+                <div>
+                    <label asp-for="Name"></label><br />
+                    <input class="form-control" asp-for="Name" />
+                </div>
+                <div>
+                    <label asp-for="Year"></label><br />
+                    <input class="form-control" asp-for="Year" />
+                    <span asp-validation-for="Year"></span>
+                </div>
+                <div>
+                    <label asp-for="Password"></label><br />
+                    <input class="form-control" asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div>
+                    <label asp-for="PasswordConfirm"></label><br />
+                    <input class="form-control" asp-for="PasswordConfirm" />
+                    <span asp-validation-for="PasswordConfirm"></span>
+                </div>
+                <div>
+                    <br />
+                    <input class="btn btn-primary" type="submit" value="Регистрация" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

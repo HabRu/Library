@@ -1,0 +1,151 @@
+﻿@model Library.Models.Book
+@{
+    ViewData["Title"] = "GetthisBook";
+}
+<style>
+  .container{
+      padding-top:12px;
+  }
+  table{
+      font-size:2em;
+  }
+  .comment{
+      width:80%;
+  }
+  .panel-title{
+      background-color:cyan;
+  }
+ 
+</style>
+<h1>@Model.Title</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <img style="border:dashed; color:red" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Image))" />
+        </div>
+        <div class="col-md-6 ">
+            <table class="table  ">
+                <tr>
+                    <th> Название:</th>
+                    <td>@Model.Title</td>
+                </tr>
+                <tr>
+                    <th>Язык:</th>
+                    <td>@Model.Language</td>
+                </tr>
+                <tr>
+                    <th>Автор:</th>
+                    <td>@Model.Authtor</td>
+                </tr>
+                <tr>
+                    <th>Жанр:</th>
+                    <td>@Model.Genre</td>
+                </tr>
+                <tr>
+                    <th>Год:</th>
+                    <td>@Model.Year </td>
+                </tr>
+                <tr>
+                    <th>Статус:</th>
+                    <td>
+                        @switch (Model.Status)
+                        {
+                            case Status.Естьвналичии:
+                                @:Есть в наличии
+                                break;
+                            case Status.Нетвналичии:
+                                @:Нет в наличии
+                                break;
+                            case Status.Забронирован:
+                                @:Забронирован
+                                break;
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Описание:</th>
+                    <td>
+                        @Model.Description
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    @if (User.IsInRole("librarian"))
+    {
+        <div class="container ">
+            <form method="get" asp-action="Edit" asp-controller="Book" asp-route-id="@Model.Id">
+                <input type="submit" class="btn-danger" value="Изменить" />
+            </form>
+        </div>
+    }
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="container ">
+            <form method="get" asp-action="CreateReserv" asp-controller="Reservation" asp-route-id="@Model.Id">
+                <input type="submit" class="btn btn-primary" value="Забронировать" />
+            </form>
+        </div>
+        <div class="container">
+            <p class="h1">Оценка:@Model.Evaluation.Average</p>
+        </div>
+        @if (!Model.Evaluation.Users.Contains(User.Identity.Name))
+        {
+            <div class="container">
+
+                <form method="post" asp-action="AddEvaluation" asp-controller="Book" asp-route-BookId="@Model.Id" asp-route-user="@User.Identity.Name">
+
+                    <select name="Score">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+
+                    <input type="submit" class="btn-success glyphicon-star" />
+                </form>
+
+            </div>
+        }
+        <div class="container ">
+            <div class="row">
+                <div class="container">
+                    <form class="comment" method="post" asp-action="AddComment" asp-controller="Book" asp-route-BookId="@Model.Id">
+                        <label for="CommentString">Написать комментарии:</label><br />
+                        <textarea class="col-md-10 form-control center-block " maxlength="120" rows="1" cols="90" draggable="false" name="CommentString"></textarea> <br />
+                        <input type="submit" class="btn btn-success" value="Отправить" />
+                    </form>
+                    <h3>Коментарии <span class="count">@Model.Comments.Count</span></h3>
+                    <hr />
+                    @if (Model.Comments.Count != 0)
+                    {
+                        <div class="comment">
+                            @foreach (Comment c in Model.Comments)
+                            {
+
+                                <div class="panel panel-primary">
+
+                                    <div class="panel-title">
+                                        @c.NameUser
+                                    </div>
+                                    <div class="panel-body">
+                                        @c.CommentString
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    }
+                    else
+                    {
+                        @:Нет коментарии
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+

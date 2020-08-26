@@ -1,0 +1,36 @@
+﻿@model Library.ViewModels.LoginViewModel
+<style>
+    .login {
+        background-color: white;
+        height: auto;
+        margin-top: 2%;
+        padding-bottom: 2%;
+        border-radius: 30px;
+    }
+</style>
+    <div class="row">
+        <div class="container  col-md-4 col-md-push-4 register  center-block login ">
+            <h2>Вход в приложение</h2>
+            <form method="post" asp-controller="Account" asp-action="Login"
+                  asp-route-returnUrl="@Model.ReturnUrl">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div>
+                    <label asp-for="Email"></label><br />
+                    <input class="form-control" asp-for="Email" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div>
+                    <label asp-for="Password"></label><br />
+                    <input class="form-control" asp-for="Password" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div>
+                    <label asp-for="RememberMe"></label><br />
+                    <input  asp-for="RememberMe" />
+                </div>
+                <div>
+                    <input type="submit" value="Войти" />
+                </div>
+            </form>
+        </div>
+    </div>

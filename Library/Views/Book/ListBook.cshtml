@@ -1,0 +1,145 @@
+﻿@using Library.Models
+
+@model Library.ViewModels.AllListBookViewModel
+<!--импортируем tag-хелперы проекта-->
+@addTagHelper "*, Library"
+@{
+    ViewData["Title"] = "GetBook";
+}
+<h1>Список книг</h1>
+<form method="get">
+    <div class="form-group form-inline">
+        <table>
+            <tr>
+                <td>
+                    <label class="control-label">Имя:</label>
+                    <input type="text" name="title" value="@Model.FilterViewModel.SelectedTitle" class="form-control" />
+                </td>
+                <td>
+                    <label class="control-label">Язык</label>
+                    <input type="text" name="language" value="@Model.FilterViewModel.SelectedLanguage" class="form-control" />
+                </td>
+                <td>
+                    <label class="control-label">Автор</label>
+                    <input type="text" name="author" value="@Model.FilterViewModel.SelectedAuthor" class="form-control" />
+                </td>
+                <td>
+                    <label>Жанр</label>
+                    <input type="text" name="genre" value="@Model.FilterViewModel.SelectedGenre" class="form-control" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Издатель</label>
+                    <input type="text" name="publisher" value="@Model.FilterViewModel.SelectedPublisher" class="form-control" />
+                </td>
+                <td>
+                    <input type="submit" value="Фильтр" class="btn btn-default" />
+                </td>
+<tr>
+        </table>
+    
+    </div>
+</form>
+<table class="table">
+    <tr>
+        <th>
+            <a asp-action="ListBook"
+               asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+              asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
+           asp-route-language="@(Model.FilterViewModel.SelectedLanguage)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           asp-route-genre="@(Model.FilterViewModel.SelectedGenre)"
+            asp-route-author="@(Model.FilterViewModel.SelectedAuthor)">
+                Имя
+                </a>
+</th>
+        <th>
+            <a asp-action="ListBook"
+               asp-route-sortOrder="@(Model.SortViewModel.AuthorSort)"
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
+               asp-route-language="@(Model.FilterViewModel.SelectedLanguage)"
+               asp-route-sortorder="@(Model.SortViewModel.Current)"
+               asp-route-genre="@(Model.FilterViewModel.SelectedGenre)"
+               asp-route-author="@(Model.FilterViewModel.SelectedAuthor)">
+                Имя автора
+                </a>
+        </th>
+        <th>
+            <a asp-action="ListBook"
+               asp-route-sortOrder="@(Model.SortViewModel.LangSort)"
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
+               asp-route-language="@(Model.FilterViewModel.SelectedLanguage)"
+               asp-route-sortorder="@(Model.SortViewModel.Current)"
+               asp-route-genre="@(Model.FilterViewModel.SelectedGenre)"
+               asp-route-author="@(Model.FilterViewModel.SelectedAuthor)">
+                Язык
+                </a>
+        </th>
+        <th>
+            <a asp-action="ListBook"
+               asp-route-sortOrder="@(Model.SortViewModel.PubSort)"
+               asp-route-title="@(Model.FilterViewModel.SelectedTitle)"
+               asp-route-language="@(Model.FilterViewModel.SelectedLanguage)"
+               asp-route-sortorder="@(Model.SortViewModel.Current)"
+               asp-route-genre="@(Model.FilterViewModel.SelectedGenre)"
+               asp-route-author="@(Model.FilterViewModel.SelectedAuthor)">
+                Статус
+                </a>
+        </th>
+       
+        @if(User.IsInRole("librarian"))
+        {
+        <th>
+            Настройки
+        </th>
+        }
+    </tr>
+    @foreach (Book u in Model.Books)
+    {
+        <tr>
+            <td><a asp-action="GetThisBook" asp-controller="Book" asp-route-id="@u.Id">@u.Title</a></td>
+            <td>@u.Authtor</td>
+            <td>@u.Language</td>
+            <td>
+                @switch (u.Status)
+                {
+                    case Status.Естьвналичии:
+                        @:Есть в наличии
+                        break;
+                    case Status.Нетвналичии:
+                        @:Нет в наличии
+                        break;
+                    case Status.Забронирован:
+                        @:Забронирован
+                        break;
+                        case Status.Сдан:
+                        @:Сдан
+                         break;
+                    }
+
+            </td>
+            <td>
+                <p>
+                    @if (@User.IsInRole("librarian"))
+                    {
+                        <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@u.Id">Удалить</a>
+                    }
+                    @if (u.Status == Status.Естьвналичии)
+                    {
+                        <a asp-action="CreateReserv" asp-controller="Reservation" asp-route-id="@u.Id">Забронировать</a>
+                    }
+                </p>
+            </td>
+        </tr>
+    }
+</table>
+<page-link page-model="@Model.PageViewModel" page-action="ListBook"
+           page-url-title="@(Model.FilterViewModel.SelectedTitle)"
+           page-url-language="@(Model.FilterViewModel.SelectedLanguage)"
+           page-url-sortorder="@(Model.SortViewModel.Current)"
+           page-url-genre="@(Model.FilterViewModel.SelectedGenre)"
+            page-url-author="@(Model.FilterViewModel.SelectedAuthor)"
+            page-url-page="@Model.PageViewModel.PageNumber"
+           ></page-link>
+

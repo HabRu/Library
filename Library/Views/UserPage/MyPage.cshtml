@@ -1,0 +1,61 @@
+﻿@model Library.Models.User
+@{
+    ViewData["Title"] = "MyPage";
+}
+<h2>@Model.UserName</h2>
+<h3>Личная информация:</h3>
+<div>
+    <p>Email: @Model.Email </p>
+    <p>Номер телефона:
+    @if (Model.PhoneNumber == null)
+    {
+        @:Не указан
+    }
+    else
+    {
+        @Model.PhoneNumber
+    }
+    </p>
+</div>
+<div>
+    <h3>Списки бронь</h3>
+    <table class="table">
+        <tr>
+            <th>
+                Номер брони
+            </th>
+            <th>
+                Номер клиента
+            </th>
+            <th>
+                Имя клиента
+            </th>
+            <th>
+                Дата бронирования
+            </th>
+            <th>
+                Дата сдачи
+            </th>
+            <th>
+                Управление
+            </th>
+
+        </tr>
+        @foreach (Reservation u in Model.ReservUser)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.UserId</td>
+                <td>@u.UserName</td>
+                <td>@u.DataBooking </td>
+                <td>@u.DataSend</td>
+                <td>
+                    @if (u.State != ReserveState.Сдан)
+                    {
+                        <a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Отказаться</a>
+                    }
+                </td>
+            </tr>
+            }
+        </table>
+</div>

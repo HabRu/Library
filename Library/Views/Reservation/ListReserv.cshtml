@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Library.Models.Reservation>
+@{
+    ViewData["Title"] = "GetList";
+}
+<table class="table">
+    <tr>
+        <th>
+            Номер брони
+        </th>
+        <th>
+            Номер клиента
+        </th>
+        <th>
+            Имя клиента
+        </th>
+        <th>
+            Дата бронирования
+        </th>
+        <th>
+            Дата сдачи
+        </th>
+        <th>
+            Управление
+        </th>
+
+    </tr>
+    @foreach (Reservation u in Model)
+    {
+        <tr>
+            <td>@u.Id</td>
+            <td>@u.UserId</td>
+            <td>@u.UserName</td>
+            <td>@u.DataBooking </td>
+            <td>@u.DataSend</td>
+            <td><p><a asp-controller="Reservation" asp-action="Accept" asp-route-id="@u.Id">Принять</a></p><p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Отказаться</a></p></td>
+        </tr>
+    }
+</table>
+

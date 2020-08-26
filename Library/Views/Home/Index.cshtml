@@ -1,0 +1,86 @@
+﻿@using Library.ViewModels;
+@model IndexViewModel
+@{
+    ViewData["Title"] = "Добро пожаловать!";
+}
+<style>
+    .img-fluid {
+        background-color: red;
+    }   
+    .item{
+        align-items:center;        
+    }
+    .container{
+        padding-top:20px;
+    }
+    .newtitle{
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size:4em;
+        color:red;
+    }
+</style>
+@if (Model.NewBooks.Count > 0 && Model.TopBooks.Count > 0)
+{
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <!-- Показатели -->
+   
+    <ol class="carousel-indicators">
+        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+        @for (int i = 1; i < Model.NewBooks.Count + 1; i++)
+        {
+            <li data-target="#carousel-example-generic" data-slide-to="@i" class="active"></li>
+        }
+    </ol>
+
+    <!-- Обертка для слайдов -->
+    <div class="carousel-inner " role="listbox">
+        <div class="item active ">
+            <img class="center-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.NewBooks[0].Image))" alt="Новинки">
+            <div class="carousel-caption">
+                <h3 class="newtitle">Новинки!!</h3>
+            </div>
+        </div>
+        @foreach (Book book in Model.NewBooks)
+        {
+            <div class="item">
+                <a asp-action="GetthisBook" asp-controller="Book" asp-route-id="@book.Id">
+                    <img class="center-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(book.Image))" alt="Новинки">
+                    <div class="carousel-caption">
+                        <h3 class="newtitle top">@book.Title</h3>
+                    </div>
+                </a>
+            </div>
+        }
+        </div>
+
+    <!-- Элементы управления -->
+    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+
+</div>
+
+<div class="container">
+    <h2>Топ книг</h2>
+    <div class="row">
+        @foreach (Book book in Model.TopBooks)
+        {
+            <div class="col-md-4">
+                <div class="thumbnail">
+                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(book.Image))" alt="...">
+                    <div class="caption">
+                        <h3>@book.Title</h3>
+                        <p>@book.Description</p>
+                        <p> <a asp-action="GetthisBook" asp-controller="Book" asp-route-id="@book.Id"  class="btn btn-default" role="button">Перейти к книге</a></p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+}
