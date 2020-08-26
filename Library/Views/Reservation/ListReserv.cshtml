@@ -32,8 +32,21 @@
             <td>@u.UserName</td>
             <td>@u.DataBooking </td>
             <td>@u.DataSend</td>
-            <td><p><a asp-controller="Reservation" asp-action="Accept" asp-route-id="@u.Id">Принять</a></p><p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Отказаться</a></p></td>
-        </tr>
+            <td>
+                @if (u.State == ReserveState.Забронирован)
+                {
+                    <p><a asp-controller="Reservation" asp-action="Accept" asp-route-id="@u.Id">Принять</a></p>
+
+                    <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Убрать бронь</a></p>
+                }
+                else if(User.IsInRole("librarian"))
+                {
+                <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Возврат книги</a></p>
+                }
+
+            </td>
+
+</tr>
     }
 </table>
 

@@ -63,9 +63,11 @@ namespace Library
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseAuthentication();
-            app.UseRouting(); // используем систему маршрутизации
 
+           
+            app.UseRouting(); // используем систему маршрутизации
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

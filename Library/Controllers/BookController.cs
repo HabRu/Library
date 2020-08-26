@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Cors;
 
 namespace Library.Controllers
 {
-    [EnableCors("AllowAllOrigin")]
     public class BookController:Controller
     {
         ApplicationContext db;

@@ -57,7 +57,7 @@ namespace Library.Controllers
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
             book.Status = Status.Сдан;
             reservation.State = ReserveState.Сдан;
-            reservation.DataSend = System.DateTime.Now.ToString("Год:yyyy Месяц:MM День:dd Час:hh");
+            reservation.DataSend = System.DateTime.Now.ToString("Год:yyyy Месяц:MM День:dd Час:hh ");
             db.SaveChanges();
             
             return RedirectToAction("ListReserv");

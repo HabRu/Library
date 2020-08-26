@@ -20,5 +20,14 @@ namespace Library.Models
         {
             Database.EnsureCreated();
         }
+
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    //builder.Entity<Book>().HasData(new Book[]
+        //    //{
+
+        //    //});
+
+        //}
     }
 }
