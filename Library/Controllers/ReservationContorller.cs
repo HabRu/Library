@@ -1,12 +1,10 @@
 ﻿using Library.Models;
-using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace Library.Controllers
 {
   
@@ -57,7 +55,7 @@ namespace Library.Controllers
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
             book.Status = Status.Сдан;
             reservation.State = ReserveState.Сдан;
-            reservation.DataSend = System.DateTime.Now.ToString("Год:yyyy Месяц:MM День:dd Час:hh ");
+            reservation.DataSend = System.DateTime.Now;
             db.SaveChanges();
             
             return RedirectToAction("ListReserv");
@@ -71,7 +69,7 @@ namespace Library.Controllers
                 User user =db.Users.FirstOrDefault(p=>p.Id==_userManager.GetUserId(User));
                 Reservation reservation = new Reservation { BookIdentificator = book.Id, UserId = user.Id, UserName = user.UserName,User=user };
                 reservation.State = ReserveState.Забронирован;
-                reservation.DataBooking = System.DateTime.Now.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm");
+                reservation.DataBooking = System.DateTime.Now;
                 db.Reservations.AddAsync(reservation);
                 book.Status = Status.Забронирован;
                 user.ReservUser.Add(reservation);

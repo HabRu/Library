@@ -12,13 +12,11 @@ namespace Library.Models
         public User User { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }
-        public string DataBooking { get; set; }
-        public string DataSend { get; set;}
+        public DateTime DataBooking { get; set; }
+        public DateTime DataSend { get; set;}
         public ReserveState State { get; set; }
         public Reservation()
         {
-            DataBooking = "Нет брони";
-            DataSend = "Нет брони";
         }
     }
 }

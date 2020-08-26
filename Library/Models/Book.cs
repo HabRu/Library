@@ -26,7 +26,6 @@ namespace Library.Models
             Evaluation = new Evaluation()
             {
                 Average = 0,
-                Count = 0,
                 BookId = Id,
                 Users = new List<string>()
                 

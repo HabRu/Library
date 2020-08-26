@@ -47,8 +47,15 @@
                 <td>@u.Id</td>
                 <td>@u.UserId</td>
                 <td>@u.UserName</td>
-                <td>@u.DataBooking </td>
+                <td>@u.DataBooking.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm") </td>
+                @if (u.State == ReserveState.Сдан)
+                {
                 <td>@u.DataSend</td>
+                }
+                else
+                {
+                    <td>----</td>
+                }
                 <td>
                     @if (u.State != ReserveState.Сдан)
                     {

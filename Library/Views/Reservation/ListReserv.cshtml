@@ -30,8 +30,15 @@
             <td>@u.Id</td>
             <td>@u.UserId</td>
             <td>@u.UserName</td>
-            <td>@u.DataBooking </td>
-            <td>@u.DataSend</td>
+            <td>@u.DataBooking.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm") </td>
+            @if (u.State == ReserveState.Сдан)
+            {
+            <td>@u.DataSend.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm")</td>
+            }
+            else
+            {
+                <td>----</td>
+            }
             <td>
                 @if (u.State == ReserveState.Забронирован)
                 {

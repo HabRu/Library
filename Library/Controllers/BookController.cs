@@ -165,7 +165,6 @@ namespace Library.Controllers
             {
                 Evaluation.Average = (byte)((Evaluation.Average + evaluation.Score) / 2);
             }
-            Evaluation.Count++;
             Evaluation.Users.Add(evaluation.user);
             Evaluation.Book = book;
             book.Evaluation = Evaluation;
