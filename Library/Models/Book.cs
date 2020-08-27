@@ -19,6 +19,9 @@ namespace Library.Models
         public string Publisher { get; set; }
         public string Description { get; set; }
         public byte[] Image { get; set; }
+
+        public ICollection<Tracking> TrackingList { get; set; }
+
         public Book()
         {
             Description = "Нет описания";
@@ -30,6 +33,7 @@ namespace Library.Models
                 Users = new List<string>()
                 
             };
+            TrackingList = new List<Tracking>();
         }
     }
 }
