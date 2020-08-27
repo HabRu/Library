@@ -62,7 +62,7 @@ namespace Library.Controllers
         {
             int pageSize = 7;
 
-            IQueryable<Book> Books = db.Books;
+            IQueryable<Book> Books = db.Books.Include(b=>b.TrackingList).ThenInclude(t=>t.User);
             if (title != null)
             {
                 Books = Books.Where(p => p.Title == title);

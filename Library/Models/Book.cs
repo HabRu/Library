@@ -20,7 +20,7 @@ namespace Library.Models
         public string Description { get; set; }
         public byte[] Image { get; set; }
 
-        public ICollection<Tracking> TrackingList { get; set; }
+        public List<Tracking> TrackingList { get; set; }
 
         public Book()
         {

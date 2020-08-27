@@ -129,6 +129,19 @@
                     {
                         <a asp-action="CreateReserv" asp-controller="Reservation" asp-route-id="@u.Id">Забронировать</a>
                     }
+                    else if (u.Status == Status.Забронирован || u.Status == Status.Сдан)
+                    {
+                        @if (u.TrackingList.FirstOrDefault(t => User.Identity.Name == t.User.Email) == null)
+                        {
+                            
+                            <a asp-action="Track" asp-controller="Tracking" asp-route-bookId="@u.Id">Отслеживать</a>
+                        }
+                        else
+                        {
+                            <a asp-action="UnTrace" asp-controller="Tracking" asp-route-bookId="@u.Id">Отменить отслеживание</a>
+                        }
+
+                    }
                 </p>
             </td>
         </tr>
