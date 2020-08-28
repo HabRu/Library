@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
+using Library.Services.EmailServices;
 
 namespace Library
 {

@@ -125,11 +125,11 @@
                     {
                         <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@u.Id">Удалить</a>
                     }
-                    @if (u.Status == Status.Естьвналичии)
+                    @if (u.Status == Status.Естьвналичии && User.Identity.IsAuthenticated)
                     {
                         <a asp-action="CreateReserv" asp-controller="Reservation" asp-route-id="@u.Id">Забронировать</a>
                     }
-                    else if (u.Status == Status.Забронирован || u.Status == Status.Сдан)
+                    else if ((u.Status == Status.Забронирован || u.Status == Status.Сдан) && User.Identity.IsAuthenticated)
                     {
                         @if (u.TrackingList.FirstOrDefault(t => User.Identity.Name == t.User.Email) == null)
                         {

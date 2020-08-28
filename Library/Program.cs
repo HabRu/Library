@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.Models;
+using Library.Services.CheckServices;
+using Library.Services.EmailServices;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -45,6 +47,16 @@ namespace Library
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+            }).ConfigureAppConfiguration(configBuilder =>
+            {
+                configBuilder.AddJsonFile("serviceconfig.json");
+            })
+            .ConfigureServices((services)=> {
+                services.AddHostedService<CheckService>();
+                services.AddSingleton<EmailService>();
+                services.AddSingleton<Settings>();
+                services.AddSingleton<MessageForm>();
+                
             });
        
         

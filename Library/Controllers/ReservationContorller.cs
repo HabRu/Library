@@ -5,16 +5,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Library.Services.EmailServices;
+
 namespace Library.Controllers
 {
   
     public class ReservationController:Controller
     {
         UserManager<User> _userManager;
+        private readonly EmailService emailService;
+        private readonly MessageForm message;
         ApplicationContext db;
-        public ReservationController(ApplicationContext applicationContext,UserManager<User> userManager)
+        public ReservationController(ApplicationContext applicationContext,UserManager<User> userManager, EmailService emailService,MessageForm message)
         {
             _userManager = userManager;
+            this.emailService = emailService;
+            this.message = message;
             db = applicationContext;
         }
         [Authorize]
@@ -23,7 +30,14 @@ namespace Library.Controllers
             Reservation reservation = db.Reservations.Include(r=>r.User).FirstOrDefault(p => p.Id == id);
             User user = reservation.User;
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
-            if (User.IsInRole("librarian") || User.Identity.Name == user.Email)
+            List<Tracking> trackings = db.Trackings.Include(t => t.User).Where(t => t.BookId == book.Id ).ToList();
+
+            foreach (var track in trackings)
+            {
+                await emailService.SendEmailAsync(track.User.Email, "Книга доступна для бронирования", message.GetMessage(track.User.UserName, book.Title)); ;
+            }
+            db.Trackings.RemoveRange(trackings);
+            if(User.IsInRole("library") || User.Identity.Name == user.Email)
             {
                 book.Status = Status.Естьвналичии;
                 db.Reservations.Remove(reservation);

@@ -65,23 +65,23 @@ namespace Library.Controllers
             IQueryable<Book> Books = db.Books.Include(b=>b.TrackingList).ThenInclude(t=>t.User);
             if (title != null)
             {
-                Books = Books.Where(p => p.Title == title);
+                Books = Books.Where(p => p.Title.StartsWith(title));
             }
             if (language != null)
             {
-                Books = Books.Where(p => p.Language == language);
+                Books = Books.Where(p => p.Language.StartsWith(language));
             }
             if (author != null)
             {
-                Books = Books.Where(p => p.Authtor == author);
+                Books = Books.Where(p => p.Authtor.StartsWith(author));
             }
             if (genre != null)
             {
-                Books = Books.Where(p => p.Genre == genre);
+                Books = Books.Where(p => p.Genre.StartsWith(genre));
             }
             if (publisher!=null)
             {
-                Books = Books.Where(p => p.Publisher == publisher);
+                Books = Books.Where(p => p.Publisher.StartsWith(publisher));
             }
             switch (sortOrder)
             {

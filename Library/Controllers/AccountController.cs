@@ -8,6 +8,8 @@ using Library.ViewModels;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
+using Library.Services.EmailServices;
+
 namespace Library.Controllers
 {
     public class AccountController:Controller
@@ -15,8 +17,10 @@ namespace Library.Controllers
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager) 
+        public EmailService emailService;
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager,EmailService email) 
         {
+            emailService = email;
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
@@ -99,6 +103,7 @@ namespace Library.Controllers
                     }
                 }
             }
+          
             return View(model);
         }
     }
