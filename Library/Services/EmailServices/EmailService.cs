@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Services.EmailServices
 {
+    //Сервис для отправки уведомленй
     public class EmailService
     {
         public async Task SendEmailAsync(string email,string subject,string message)

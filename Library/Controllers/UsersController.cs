@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 namespace Library.Controllers
 {
+    //Администрирование над пользователями
     [Authorize(Roles ="admin")]
     public class UsersController:Controller
     {

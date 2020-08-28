@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 namespace Library.Controllers
 {
+    //Администрирование
     [Authorize(Roles ="admin")]
     public class RolesController:Controller
     {
@@ -21,6 +22,7 @@ namespace Library.Controllers
         }
         public IActionResult Index() => View(_roleManager.Roles.ToList());
         public IActionResult Create() => View();
+        //Создание нового пользователя
         [HttpPost]
         public async Task<IActionResult> Create(string name)
         {
@@ -41,6 +43,8 @@ namespace Library.Controllers
             }
             return View(name);
         }
+
+        //Удаление пользователя
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -51,6 +55,7 @@ namespace Library.Controllers
             }
             return RedirectToAction("Index");
         }
+        //Список пользователей
         public IActionResult UserList() => View(_userManager.Users.ToList());
         public async Task<IActionResult> Edit(string userId)
         {
@@ -73,6 +78,8 @@ namespace Library.Controllers
 
             return NotFound();
         }
+
+        //Редактирование ролей пользователя
         [HttpPost]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {

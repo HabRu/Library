@@ -17,6 +17,8 @@ namespace Library.Controllers
         private readonly EmailService emailService;
         private readonly MessageForm message;
         ApplicationContext db;
+
+
         public ReservationController(ApplicationContext applicationContext,UserManager<User> userManager, EmailService emailService,MessageForm message)
         {
             _userManager = userManager;
@@ -24,24 +26,32 @@ namespace Library.Controllers
             this.message = message;
             db = applicationContext;
         }
+
+        //Get-контроллер. Отказ от резервации
         [Authorize]
         public async Task<IActionResult> Refuse(int? id)
         {
+
             Reservation reservation = db.Reservations.Include(r=>r.User).FirstOrDefault(p => p.Id == id);
             User user = reservation.User;
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
+            //Получакм список подписок
             List<Tracking> trackings = db.Trackings.Include(t => t.User).Where(t => t.BookId == book.Id ).ToList();
-
+            //Отправка сообщения подписчикам, что книга доступна для бронирования
             foreach (var track in trackings)
             {
                 await emailService.SendEmailAsync(track.User.Email, "Книга доступна для бронирования", message.GetMessage(track.User.UserName, book.Title)); ;
             }
+            //Удаляем подписчиков
             db.Trackings.RemoveRange(trackings);
+            //Проверка того,что пользователь авторизован
             if(User.IsInRole("library") || User.Identity.Name == user.Email)
             {
+                //Удаление резирвации
                 book.Status = Status.Естьвналичии;
                 db.Reservations.Remove(reservation);
                 user.ReservUser.Remove(reservation);
+                //Сохранение изменений
                 await db.SaveChangesAsync();
                 if (User.IsInRole("librarian"))
                 {
@@ -55,6 +65,7 @@ namespace Library.Controllers
             }
             return RedirectToAction("ListReserv");
         }
+        //Список всех резераций
         [Authorize(Roles = "librarian")]
         public async Task<IActionResult> ListReserv()
         {
@@ -62,6 +73,8 @@ namespace Library.Controllers
             return View(await reservations.AsNoTracking().ToListAsync());
 
         }
+
+        //Контроллер для сдачи книги
         [Authorize(Roles = "librarian")]
         public IActionResult Accept(int? id)
         {
@@ -74,6 +87,7 @@ namespace Library.Controllers
             
             return RedirectToAction("ListReserv");
         }
+        // Создаем резервацию
         [Authorize]
         public IActionResult CreateReserv(int? id)
         {

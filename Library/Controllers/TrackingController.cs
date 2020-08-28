@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
 {
+    //Контроллер для отслеживание бронированных книг
     [Authorize]
     public class TrackingController : Controller
     {
@@ -22,7 +23,7 @@ namespace Library.Controllers
         }
 
 
-      
+      //Добавления пользователя в список для отслеживание книг
         [HttpGet]
         public IActionResult Track(int bookId)
         {
@@ -35,7 +36,7 @@ namespace Library.Controllers
             db.SaveChanges();
             return RedirectToAction("ListBook", "Book");
         }
-
+        //Уаление пользователя от списка 
         public IActionResult UnTrace(int bookId)
         {
             Tracking tracking = db.Trackings.FirstOrDefault((t) =>t.BookId == bookId && t.UserId == userManager.GetUserId(User));

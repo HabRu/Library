@@ -25,29 +25,35 @@ namespace Library.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        //Контроллер возврата страницы  для входа
         [AllowAnonymous]
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
+        //Контроллер обрабатывающий post-запрс при входе в личный кабинет
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            //Проверка правильности ввода логина и пароля
             if (ModelState.IsValid)
             {
+                // Авторизация с помощью  Identity-метода 
                 var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
-                    // проверяем, принадлежит ли URL приложению
+                    // Проверяем, принадлежит ли URL приложению
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
+                        //Если да, то переходим в предыдущую страницу 
                         return Redirect(model.ReturnUrl);
                     }
                     else
                     {
+                        //Если нет, то переходим в начальную сраницу
                         return RedirectToAction("Index", "Home");
                     }
                 }
@@ -58,6 +64,8 @@ namespace Library.Controllers
             }
             return View(model);
         }
+        //
+        //Контроллер для деавторизации
         [Authorize]
         [HttpGet]
         public IActionResult LogOfff()
@@ -73,30 +81,42 @@ namespace Library.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        //Get-контролер возврата страницы для регистрации 
        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+        //Post-контроллер,обработки формы регистрации 
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
+            //#IF1:Проверяем валидность переменных форм
             if (ModelState.IsValid)
             {
+                //Если валидно то
+                //Создаем переменную для пользователя
                 User user = new User { Email = model.Email, UserName = model.Email,NameUser=model.Name };
+                //Добавляем в бд и хешируем пароль, и получаем result,который хранить состояние операции
                 var result = await _userManager.CreateAsync(user, model.Password); 
+                //#IF2:Если состояние операции Succeeded
                 if (result.Succeeded)
                 {
+                    //То пользователю добавляем роль user по умолчанию,результат операции возвращается 
                     result = await _userManager.AddToRoleAsync(user, "user");
+                    //#IF3:Елси рузельтат-Succeded 
                     if (result.Succeeded)
                     {
+                        //Авторизация
                         await _signInManager.SignInAsync(user, false);
                         return RedirectToAction("Index", "Home");
                     }
                 }
+                //#IF2:Если состояние операции не Succeeded,то
                 else
                 {
+                    //Добавляем ошибки
                     foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);

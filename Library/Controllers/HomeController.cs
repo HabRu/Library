@@ -17,11 +17,15 @@ namespace Library.Controllers
         {
             db = applicationContext;
         }
+
+        //Контроллер начальной страницы
         public IActionResult Index()
         {
             List<Book> books = db.Books.ToList();
+            //Возвращает новые книги
             List<Book> NewBooks = books.TakeLast(2).ToList();
-            List<Book> TopBooks = books.OrderBy(p => p.Evaluation.Average).Take(3).ToList();
+            //Возвращает популярные книги
+            List<Book> TopBooks = books.OrderBy(p => p.Evaluation.Average).TakeLast(3).ToList();
             IndexViewModel indexViewModel = new IndexViewModel { NewBooks = NewBooks, TopBooks = TopBooks };
             return View(indexViewModel);
         }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Library.Services.CheckServices
 {
+    //Сервис для проверки не истек ли срок бронирования
     public class CheckService:IHostedService,IDisposable
     {
         private readonly EmailService emailService;
@@ -28,10 +29,12 @@ namespace Library.Services.CheckServices
             this.message = message;
         }
 
+        //Запуск сервиса
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            //Интервал запуска сервиса
             var interval = settings.RunInterval;
-
+            //Запускаем таймер,который будет вызывать метод каждые interval дней
             timer = new Timer((e) => CheckReservs(),
                                 null,
                                 TimeSpan.Zero,
@@ -39,6 +42,7 @@ namespace Library.Services.CheckServices
             return Task.CompletedTask;
         }
 
+        
         public void CheckReservs()
         {
             using (var scope = serviceScopeFactory.CreateScope())
@@ -54,6 +58,7 @@ namespace Library.Services.CheckServices
             }
         }
 
+        //Метод для проверки не истек ли срок бронирования
         public async void CheckDate(Reservation reservation)
         {
             using (var scope = serviceScopeFactory.CreateScope())
@@ -61,6 +66,7 @@ namespace Library.Services.CheckServices
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 if (reservation.State != ReserveState.Сдан)
                 {
+                    //Если прошло больше settings.TimeReservation  дней тода удаляем бронирование и отправляем уведомления, тем кто отслеживает эту книгу
                     if (DateTime.Now.Subtract(reservation.DataBooking).Days > settings.TimeReservation)
                     {
                         List<Tracking> trackings = db.Trackings.Include(t => t.User).Include(t=>t.Book).Where(t => t.BookId == reservation.BookIdentificator).ToList();
