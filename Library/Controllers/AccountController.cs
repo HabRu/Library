@@ -9,6 +9,8 @@ using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Library.Services.EmailServices;
+using Microsoft.AspNetCore.Http;
+using Library.Models.Results;
 
 namespace Library.Controllers
 {
@@ -40,6 +42,19 @@ namespace Library.Controllers
             //Проверка правильности ввода логина и пароля
             if (ModelState.IsValid)
             {
+                //Находим пользователя
+                var user = await _userManager.FindByNameAsync(model.Email);
+                if (user != null)
+                {
+                    // проверяем, подтвержден ли email
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        return View(model);
+                    }
+                }
+
+
                 // Авторизация с помощью  Identity-метода 
                 var result =
                     await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
@@ -103,15 +118,21 @@ namespace Library.Controllers
                 //#IF2:Если состояние операции Succeeded
                 if (result.Succeeded)
                 {
+                    //Генерируем токен для подтверждения
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //Создаем ссылку для подтверждения
+                    var callbackUrl=Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        new { userId = user.Id, code = code },
+                        protocol: HttpContext.Request.Scheme);
                     //То пользователю добавляем роль user по умолчанию,результат операции возвращается 
                     result = await _userManager.AddToRoleAsync(user, "user");
-                    //#IF3:Елси рузельтат-Succeded 
-                    if (result.Succeeded)
-                    {
-                        //Авторизация
-                        await _signInManager.SignInAsync(user, false);
-                        return RedirectToAction("Index", "Home");
-                    }
+                    //Отправляем письмо для подтверждения
+                    await emailService.SendEmailAsync(model.Email, "Подтвердите свой аккаунт",
+                       $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
+
+                    return new HtmlResult($"<b>Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме</b> <b><i><a href={Url.Action("Index", "Home")}>Начальная страница</a></i></b>");
                 }
                 //#IF2:Если состояние операции не Succeeded,то
                 else
@@ -125,6 +146,31 @@ namespace Library.Controllers
             }
           
             return View(model);
+        }
+        //Get-контроллер. Для подтверждения "email"а
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            //Находим пользователя
+            var user = await _userManager.FindByIdAsync(userId);
+            //Если user=null
+            if (user == null)
+            {
+                //Возвращаем страницу  ошибок
+                return View("Error");
+            }
+            //Подтверждаем email  и сохраняем в бд
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+                return View("Error");
         }
     }
 }

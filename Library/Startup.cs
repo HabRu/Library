@@ -37,7 +37,7 @@ namespace Library
 
             services.AddDbContext<ApplicationContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Services.EmailServices
 {
-    //Сервис для отправки уведомленй
+    //Сервис для отправки уведомлений
     public class EmailService
     {
         public async Task SendEmailAsync(string email,string subject,string message)
@@ -23,11 +23,12 @@ namespace Library.Services.EmailServices
                 SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 25);
                 smtp.Credentials = new NetworkCredential("aa.d.m.i.n@yandex.ru", "Admin_Admin_1");
                 smtp.EnableSsl = true;
+                Console.WriteLine(email);
                 await smtp.SendMailAsync(m);
             }
-            catch
+            catch(Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
             
         }
