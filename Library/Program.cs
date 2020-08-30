@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Library.Models;
 using Library.Services.CheckServices;
+using Library.Services.CheckServicesQuartz;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,7 @@ namespace Library
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred while seeding the database.");
                 }
+
             }
 
             host.Run();

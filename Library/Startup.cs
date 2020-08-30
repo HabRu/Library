@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using Library.Services.EmailServices;
 using Library.Services.CheckServices;
+using Library.Services.CheckServicesQuartz;
+using Quartz.Spi;
+using Quartz;
+using Quartz.Impl;
 
 namespace Library
 {
@@ -32,12 +36,23 @@ namespace Library
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHostedService<CheckService>();
             services.AddSingleton<EmailService>();
             services.AddSingleton<Settings>();
             services.AddSingleton<MessageForm>();
+            services.AddHostedService<CheckService>();
 
-            
+            //Передаем конфигурацию 'EmailServiceSettings' через IOptions
+            services.Configure<Settings>(Configuration.GetSection("EmailServiceSettings"));
+
+            // Add Quartz services
+            services.AddSingleton<IJobFactory, JobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            // Add our job
+            services.AddSingleton<CheckJob>();
+            services.AddSingleton(new EmailScheduler(
+                jobType: typeof(CheckJob),
+                cronExpression: $"* * * 0/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?")); // run every 5 seconds
 
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -51,8 +66,8 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //Передаем конфигурацию 'EmailServiceSettings' через IOptions
-            services.Configure<Settings>(Configuration.GetSection("EmailServiceSettings"));
+            
+            
 
             services.AddMvc();
          
