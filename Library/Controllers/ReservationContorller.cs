@@ -10,8 +10,8 @@ using Library.Services.EmailServices;
 
 namespace Library.Controllers
 {
-  
-    public class ReservationController:Controller
+
+    public class ReservationController : Controller
     {
         UserManager<User> _userManager;
         private readonly EmailService emailService;
@@ -48,7 +48,7 @@ namespace Library.Controllers
             if(User.IsInRole("library") || User.Identity.Name == user.Email)
             {
                 //Удаление резирвации
-                book.Status = Status.Естьвналичии;
+                book.Status = Status.Available;
                 db.Reservations.Remove(reservation);
                 user.ReservUser.Remove(reservation);
                 //Сохранение изменений
@@ -80,8 +80,8 @@ namespace Library.Controllers
         {
             Reservation reservation = db.Reservations.FirstOrDefault(p=>p.Id==id);
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
-            book.Status = Status.Сдан;
-            reservation.State = ReserveState.Сдан;
+            book.Status = Status.Available;
+            reservation.State = ReserveState.Passed;
             reservation.DataSend = System.DateTime.Now;
             db.SaveChanges();
             
@@ -96,10 +96,10 @@ namespace Library.Controllers
             {
                 User user =db.Users.FirstOrDefault(p=>p.Id==_userManager.GetUserId(User));
                 Reservation reservation = new Reservation { BookIdentificator = book.Id, UserId = user.Id, UserName = user.UserName,User=user };
-                reservation.State = ReserveState.Забронирован;
+                reservation.State = ReserveState.Booked;
                 reservation.DataBooking = System.DateTime.Now;
                 db.Reservations.AddAsync(reservation);
-                book.Status = Status.Забронирован;
+                book.Status = Status.Booked;
                 user.ReservUser.Add(reservation);
                 db.Books.Update(book);
                 db.SaveChanges();

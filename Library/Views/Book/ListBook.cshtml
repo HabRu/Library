@@ -53,7 +53,7 @@
             asp-route-author="@(Model.FilterViewModel.SelectedAuthor)">
                 Имя
                 </a>
-</th>
+        </th>
         <th>
             <a asp-action="ListBook"
                asp-route-sortOrder="@(Model.SortViewModel.AuthorSort)"
@@ -104,16 +104,16 @@
             <td>
                 @switch (u.Status)
                 {
-                    case Status.Естьвналичии:
+                    case Status.Available:
                         @:Есть в наличии
                         break;
-                    case Status.Нетвналичии:
+                    case Status.NotAvailable:
                         @:Нет в наличии
                         break;
-                    case Status.Забронирован:
+                    case Status.Booked:
                         @:Забронирован
                         break;
-                        case Status.Сдан:
+                        case Status.Passed:
                         @:Сдан
                          break;
                     }
@@ -125,11 +125,11 @@
                     {
                         <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@u.Id">Удалить</a>
                     }
-                    @if (u.Status == Status.Естьвналичии && User.Identity.IsAuthenticated)
+                    @if (u.Status == Status.Available && User.Identity.IsAuthenticated)
                     {
                         <a asp-action="CreateReserv" asp-controller="Reservation" asp-route-id="@u.Id">Забронировать</a>
                     }
-                    else if ((u.Status == Status.Забронирован || u.Status == Status.Сдан) && User.Identity.IsAuthenticated)
+                    else if ((u.Status == Status.Booked || u.Status == Status.Passed) && User.Identity.IsAuthenticated)
                     {
                         @if (u.TrackingList.FirstOrDefault(t => User.Identity.Name == t.User.Email) == null)
                         {

@@ -47,18 +47,6 @@ namespace Library
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-            }).ConfigureAppConfiguration(configBuilder =>
-            {
-                configBuilder.AddJsonFile("serviceconfig.json");
-            })
-            .ConfigureServices((services)=> {
-                services.AddHostedService<CheckService>();
-                services.AddSingleton<EmailService>();
-                services.AddSingleton<Settings>();
-                services.AddSingleton<MessageForm>();
-                
-            });
-       
-        
+            }); 
         }
 }

@@ -31,7 +31,7 @@
             <td>@u.UserId</td>
             <td>@u.UserName</td>
             <td>@u.DataBooking.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm") </td>
-            @if (u.State == ReserveState.Сдан)
+            @if (u.State == ReserveState.Passed)
             {
             <td>@u.DataSend.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm")</td>
             }
@@ -40,7 +40,7 @@
                 <td>----</td>
             }
             <td>
-                @if (u.State == ReserveState.Забронирован)
+                @if (u.State == ReserveState.Booked)
                 {
                     <p><a asp-controller="Reservation" asp-action="Accept" asp-route-id="@u.Id">Принять</a></p>
 

@@ -1,6 +1,5 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,17 +8,17 @@ using Library.ViewModels;
 using System.IO;
 using Library.Tag;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 
 namespace Library.Controllers
 {
-    public class BookController:Controller
+    public class BookController : Controller
     {
         ApplicationContext db;
         public BookController(ApplicationContext applicationContext)
         {
             db = applicationContext;
         }
+
         //Get-контроллер.Возрат страницы для добавления книг
         //ДОСТУПНА ТОЛЬКО ДЛЯ РОЛИ "librarian"
         [Authorize(Roles = "librarian")]
@@ -28,12 +27,13 @@ namespace Library.Controllers
         {
             return View();
         }
+
         //Post-контроллер.Обработка формы для добавления книг
         [HttpPost]
         public async Task<IActionResult> AddBook(AddBookViewModel model)
         {
             //Создаем переменную книги
-            Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year,Publisher=model.Publisher, Genre = model.Genre,Status=Status.Естьвналичии };
+            Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year,Publisher=model.Publisher, Genre = model.Genre,Status=Status.Available };
             //Если изображение не null,
             if (model.Image != null)
             {
@@ -180,6 +180,7 @@ namespace Library.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("GetThisBook", new { id = comment.BookId });
         }
+
         //Post-контроллер.Добавление оценки
         public IActionResult AddEvaluation(EvaluationViewModel evaluation)
         {
@@ -201,6 +202,7 @@ namespace Library.Controllers
             db.SaveChanges(); 
             return RedirectToAction("GetThisBook", new { id = evaluation.BookId });
         }
+
         [Authorize(Roles = "librarian")]
         [HttpGet]
         public IActionResult Edit(int? id)

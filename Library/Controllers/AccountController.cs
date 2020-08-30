@@ -1,25 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Library.ViewModels;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore.Http;
 using Library.Models.Results;
 
 namespace Library.Controllers
 {
-    public class AccountController:Controller
+    public class AccountController : Controller
     {
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
         private RoleManager<IdentityRole> _roleManager;
         public EmailService emailService;
+
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager,EmailService email) 
         {
             emailService = email;
@@ -27,6 +24,7 @@ namespace Library.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
         //Контроллер возврата страницы  для входа
         [AllowAnonymous]
         [HttpGet]
@@ -34,6 +32,7 @@ namespace Library.Controllers
         {
             return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
+
         //Контроллер обрабатывающий post-запрс при входе в личный кабинет
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -79,6 +78,7 @@ namespace Library.Controllers
             }
             return View(model);
         }
+
         //
         //Контроллер для деавторизации
         [Authorize]
@@ -88,6 +88,7 @@ namespace Library.Controllers
             _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LogOff()
@@ -96,6 +97,7 @@ namespace Library.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
         //Get-контролер возврата страницы для регистрации 
        [AllowAnonymous]
         [HttpGet]
@@ -103,6 +105,7 @@ namespace Library.Controllers
         {
             return View();
         }
+
         //Post-контроллер,обработки формы регистрации 
         [HttpPost]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
@@ -147,6 +150,7 @@ namespace Library.Controllers
           
             return View(model);
         }
+
         //Get-контроллер. Для подтверждения "email"а
         [HttpGet]
         [AllowAnonymous]

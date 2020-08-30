@@ -3,7 +3,6 @@ using Library.Services.EmailServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 namespace Library.Services.CheckServices
 {
     //Сервис для проверки не истек ли срок бронирования
-    public class CheckService:IHostedService,IDisposable
+    public class CheckService : IHostedService, IDisposable
     {
         private readonly EmailService emailService;
         private readonly IServiceScopeFactory serviceScopeFactory;
@@ -64,7 +63,7 @@ namespace Library.Services.CheckServices
             using (var scope = serviceScopeFactory.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                if (reservation.State != ReserveState.Сдан)
+                if (reservation.State != ReserveState.Passed)
                 {
                     //Если прошло больше settings.TimeReservation  дней тода удаляем бронирование и отправляем уведомления, тем кто отслеживает эту книгу
                     if (DateTime.Now.Subtract(reservation.DataBooking).Days > settings.TimeReservation)
@@ -74,7 +73,7 @@ namespace Library.Services.CheckServices
                         {
                             foreach (var trac in trackings)
                             {
-                                trac.Book.Status = Status.Естьвналичии;
+                                trac.Book.Status = Status.Available;
                                 await emailService.SendEmailAsync(trac.User.Email, "Книга доступна для бронирования", message.GetMessage(trac.User.UserName,trac.Book.Title));
                             }
 

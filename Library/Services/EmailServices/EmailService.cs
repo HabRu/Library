@@ -30,7 +30,6 @@ namespace Library.Services.EmailServices
             {
                 Console.WriteLine(ex.Message);
             }
-            
         }
     }
 }

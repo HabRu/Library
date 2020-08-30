@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Library.Models.Results
 {
-    public class HtmlResult:IActionResult
+    public class HtmlResult : IActionResult
     {
         string htmlCode;
         public HtmlResult(string html)

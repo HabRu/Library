@@ -2,8 +2,6 @@
 using Library.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -11,15 +9,18 @@ namespace Library.Controllers
 {
     //Администрирование над пользователями
     [Authorize(Roles ="admin")]
-    public class UsersController:Controller
+    public class UsersController : Controller
     {
         UserManager<User> _userManager;
         public UsersController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }
+
         public IActionResult Index() => View(_userManager.Users.ToList());
+
         public IActionResult Create() => View();
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
@@ -51,6 +52,7 @@ namespace Library.Controllers
             EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email,Name=user.NameUser};
             return View(model);
         }
+        
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {

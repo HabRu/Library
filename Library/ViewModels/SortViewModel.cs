@@ -8,10 +8,15 @@ namespace Library.ViewModels
 {
     public class SortViewModel
     {
+       
         public SortState NameSort { get; set; } 
+        
         public SortState AuthorSort { get; set; }   
+        
         public SortState LangSort { get; set; } 
+        
         public SortState PubSort { get; set; }
+        
         public SortState Current { get; set; }  
         
 
@@ -22,9 +27,9 @@ namespace Library.ViewModels
             LangSort = sortOrder == SortState.LangAsc ? SortState.LangDesc : SortState.LangAsc;
             PubSort = sortOrder == SortState.PubAsc ? SortState.PubDesc : SortState.PubAsc;
             Current = sortOrder;
-            
-            
-            
+
+
+
             //// значения по умолчанию
             //NameSort = SortState.NameAsc;
             //AuthorSort = SortState.AuthorAsc;
@@ -33,7 +38,7 @@ namespace Library.ViewModels
             //Up = true;
 
             //if (sortOrder == SortState.AuthorDesc || sortOrder == SortState.NameDesc
-            //    || sortOrder == SortState.LangDesc||sortOrder==SortState.PubDesc)
+            //    || sortOrder == SortState.LangDesc || sortOrder == SortState.PubDesc)
             //{
             //    Up = false;
             //}

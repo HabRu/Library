@@ -9,7 +9,9 @@ namespace Library.ViewModels
     public class EvaluationViewModel
     {
         public int BookId { get; set; }
+        
         public byte Score { get; set; }
+        
         public string user { get;set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Library.ViewModels
     public class ListBookViewModel
     {
         public IEnumerable<Book> Books { get; set; }
+        
         public SortViewModel SortViewModel { get; set; }
     }
 }

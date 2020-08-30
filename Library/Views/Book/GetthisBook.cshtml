@@ -50,13 +50,13 @@
                     <td>
                         @switch (Model.Status)
                         {
-                            case Status.Естьвналичии:
+                            case Status.Available:
                                 @:Есть в наличии
                                 break;
-                            case Status.Нетвналичии:
+                            case Status.NotAvailable:
                                 @:Нет в наличии
                                 break;
-                            case Status.Забронирован:
+                            case Status.Booked:
                                 @:Забронирован
                                 break;
                         }
