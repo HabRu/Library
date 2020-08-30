@@ -1,8 +1,10 @@
 ﻿using Library.Models;
 using Library.Services.EmailServices;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,11 @@ namespace Library.Services.CheckServices
         private readonly MessageForm message;
         private Timer timer;
 
-        public CheckService(EmailService emailService,IServiceScopeFactory serviceScopeFactory,Settings settings,MessageForm message)
+        public CheckService(EmailService emailService,IServiceScopeFactory serviceScopeFactory,IOptions<Settings> settings,MessageForm message)
         {
             this.emailService = emailService;
             this.serviceScopeFactory = serviceScopeFactory;
-            this.settings = settings;
+            this.settings = settings.Value;
             this.message = message;
         }
 
@@ -33,6 +35,7 @@ namespace Library.Services.CheckServices
         {
             //Интервал запуска сервиса
             var interval = settings.RunInterval;
+            Console.WriteLine($"------{settings.RunInterval}");
             //Запускаем таймер,который будет вызывать метод каждые interval дней
             timer = new Timer((e) => CheckReservs(),
                                 null,

@@ -4,14 +4,8 @@ namespace Library.Models
 {
     public class Settings
     {
-        private readonly IConfiguration configuration;
+        public int TimeReservation { get; set; }
 
-        public Settings(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
-        public int TimeReservation => configuration.GetValue<int>("TimeReservation");
-        public int RunInterval => configuration.GetValue<int>("RunInterval");
+        public int RunInterval { get; set; }
     }
 }

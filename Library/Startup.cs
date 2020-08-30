@@ -21,6 +21,7 @@ namespace Library
 {
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,6 +37,8 @@ namespace Library
             services.AddSingleton<Settings>();
             services.AddSingleton<MessageForm>();
 
+            
+
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -47,6 +50,9 @@ namespace Library
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            //Передаем конфигурацию 'EmailServiceSettings' через IOptions
+            services.Configure<Settings>(Configuration.GetSection("EmailServiceSettings"));
 
             services.AddMvc();
          
