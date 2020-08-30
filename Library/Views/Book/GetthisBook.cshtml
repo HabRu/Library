@@ -21,7 +21,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <img style="border:dashed; color:red" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Image))" />
+            <img style="border:dashed; color:red" src="@Url.Content(Model.Image)" />
         </div>
         <div class="col-md-6 ">
             <table class="table  ">

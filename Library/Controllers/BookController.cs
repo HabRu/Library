@@ -8,15 +8,20 @@ using Library.ViewModels;
 using System.IO;
 using Library.Tag;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Hosting;
+using System.Net.WebSockets;
 
 namespace Library.Controllers
 {
     public class BookController : Controller
     {
         ApplicationContext db;
-        public BookController(ApplicationContext applicationContext)
+        private readonly IHostEnvironment hostEnvironment;
+
+        public BookController(ApplicationContext applicationContext, IHostEnvironment hostEnvironment)
         {
             db = applicationContext;
+            this.hostEnvironment = hostEnvironment;
         }
 
         //Get-контроллер.Возрат страницы для добавления книг
@@ -37,13 +42,25 @@ namespace Library.Controllers
             //Если изображение не null,
             if (model.Image != null)
             {
-                //То сохраняем его в бд
-                byte[] imageData = null;
-                using(var binaryReader=new BinaryReader(model.Image.OpenReadStream()))
+                
+                var path = "/images/"+model.Image.FileName;
+                var contentPath = hostEnvironment.ContentRootPath + path;
+
+                if (System.IO.File.Exists(contentPath))
                 {
-                    imageData = binaryReader.ReadBytes((int)model.Image.Length);
+                    using (var fileStream = new FileStream(contentPath, FileMode.Create))
+                    {
+                        await model.Image.CopyToAsync(fileStream);
+                    }
                 }
-                book.Image = imageData;
+                ////То сохраняем его в бд
+                //byte[] imageData = null;
+                //using(var binaryReader=new BinaryReader(model.Image.OpenReadStream()))
+                //{
+                //    imageData = binaryReader.ReadBytes((int)model.Image.Length);
+                //}
+
+                book.Image = path;
             }
 
             //Добавляем книгу в бд

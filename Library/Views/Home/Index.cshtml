@@ -35,7 +35,7 @@
     <!-- Обертка для слайдов -->
     <div class="carousel-inner " role="listbox">
         <div class="item active ">
-            <img class="center-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.NewBooks[0].Image))" alt="Новинки">
+            <img class="center-block" src=@Model.NewBooks[0].Image alt="Новинки">
             <div class="carousel-caption">
                 <h3 class="newtitle">Новинки!!</h3>
             </div>
@@ -44,7 +44,7 @@
         {
             <div class="item">
                 <a asp-action="GetthisBook" asp-controller="Book" asp-route-id="@book.Id">
-                    <img class="center-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(book.Image))" alt="Новинки">
+                    <img class="center-block" src=@book.Image alt="Новинки">
                     <div class="carousel-caption">
                         <h3 class="newtitle top">@book.Title</h3>
                     </div>
@@ -72,7 +72,7 @@
         {
             <div class="col-md-4">
                 <div class="thumbnail">
-                    <img src="data:image/jpeg;base64,@(Convert.ToBase64String(book.Image))" alt="...">
+                    <img src=@book.Image alt="...">
                     <div class="caption">
                         <h3>@book.Title</h3>
                         <p>@book.Description</p>

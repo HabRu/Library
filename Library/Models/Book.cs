@@ -27,7 +27,7 @@ namespace Library.Models
 
         public string Description { get; set; }
 
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
 
         public List<Tracking> TrackingList { get; set; }
 
@@ -43,6 +43,7 @@ namespace Library.Models
                 
             };
             TrackingList = new List<Tracking>();
+            Image = "/images/NoImage.jpg";
         }
     }
 }

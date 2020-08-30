@@ -8,7 +8,7 @@
         <input type="hidden" asp-for="Title" />
     </div>
     <div class="form-group">
-        <img style="border:dashed; color:red" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Image))" />
+        <img style="border:dashed; color:red" src="@Url.Content(Model.Image)" />
     </div>
     <div class="form-group">
         <label asp-for="Authtor" class="control-label">Автор</label>
