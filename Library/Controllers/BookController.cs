@@ -8,17 +8,16 @@ using Library.ViewModels;
 using System.IO;
 using Library.Tag;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Hosting;
-using System.Net.WebSockets;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Library.Controllers
 {
     public class BookController : Controller
     {
         ApplicationContext db;
-        private readonly IHostEnvironment hostEnvironment;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public BookController(ApplicationContext applicationContext, IHostEnvironment hostEnvironment)
+        public BookController(ApplicationContext applicationContext, IWebHostEnvironment hostEnvironment)
         {
             db = applicationContext;
             this.hostEnvironment = hostEnvironment;
@@ -44,9 +43,9 @@ namespace Library.Controllers
             {
                 
                 var path = "/images/"+model.Image.FileName;
-                var contentPath = hostEnvironment.ContentRootPath + path;
+                var contentPath = hostEnvironment.WebRootPath + path;
 
-                if (System.IO.File.Exists(contentPath))
+                if (!System.IO.File.Exists(contentPath))
                 {
                     using (var fileStream = new FileStream(contentPath, FileMode.Create))
                     {

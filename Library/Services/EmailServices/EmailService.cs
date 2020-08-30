@@ -29,7 +29,7 @@ namespace Library.Services.EmailServices
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }
+            }          
         }
     }
 }
