@@ -9,7 +9,6 @@ namespace Library.ViewModels
 {
     public class AddBookViewModel
     {
-
         [Required]
         [Display(Name ="Номер книжки")]
         public int Id { get; set; }

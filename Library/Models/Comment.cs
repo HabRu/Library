@@ -7,7 +7,6 @@ namespace Library.Models
 {
     public class Comment
     {
-
         public int Id { get; set; }
 
         public string NameUser { get; set; }

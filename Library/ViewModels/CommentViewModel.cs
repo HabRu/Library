@@ -7,7 +7,6 @@ namespace Library.ViewModels
 {
     public class CommentViewModel
     {
-        
         public string CommentString { get; set; }
      
         public int BookId { get; set; }

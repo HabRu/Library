@@ -7,7 +7,6 @@ namespace Library.ViewModels
 {
     public class UserRegisterViewModel
     {
-
         [Required]
         [Display(Name ="Логин")]
         public string Email { get; set; }
