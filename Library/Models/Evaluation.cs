@@ -16,6 +16,7 @@ namespace Library.Models
         public byte Average { get; set; }
 
         public List<string> Users { get; set; }
+
     }
 
 }

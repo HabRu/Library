@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Library.Models.Configuration;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Models
@@ -22,6 +23,18 @@ namespace Library.Models
         {
             //Миграция в бд
             //Database.Migrate();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new BookConfigure())
+                        .ApplyConfiguration(new CommentConfigure())
+                        .ApplyConfiguration(new EvaluationConfigure())
+                        .ApplyConfiguration(new ReservationConfigure())
+                        .ApplyConfiguration(new TrackingConfigure());
+
+            base.OnModelCreating(modelBuilder);
+
         }
     }
 }

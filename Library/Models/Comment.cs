@@ -10,7 +10,7 @@ namespace Library.Models
         public int Id { get; set; }
 
         public string NameUser { get; set; }
-
+        
         public string CommentString { get; set; }
 
         public int BookId { get; set; }
