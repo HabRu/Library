@@ -20,16 +20,8 @@ namespace Library.Models
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
-            //Database.EnsureCreated();
+            //Миграция в бд
+            //Database.Migrate();
         }
-
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    //builder.Entity<Book>().HasData(new Book[]
-        //    //{
-
-        //    //});
-
-        //}
     }
 }
