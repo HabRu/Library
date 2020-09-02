@@ -20,6 +20,8 @@ namespace Library.Models
 
         public Evaluation Evaluation { get; set; }
 
+        public Reservation Reservation { get; set; }
+
         public Status Status { get; set; }
 
         public string Publisher { get; set; }
