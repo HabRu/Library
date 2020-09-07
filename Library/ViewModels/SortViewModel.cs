@@ -8,16 +8,16 @@ namespace Library.ViewModels
 {
     public class SortViewModel
     {
-        public SortState NameSort { get; set; } 
-        
-        public SortState AuthorSort { get; set; }   
-        
-        public SortState LangSort { get; set; } 
-        
+        public SortState NameSort { get; set; }
+
+        public SortState AuthorSort { get; set; }
+
+        public SortState LangSort { get; set; }
+
         public SortState PubSort { get; set; }
-        
-        public SortState Current { get; set; }  
-        
+
+        public SortState Current { get; set; }
+
 
         public SortViewModel(SortState sortOrder)
         {

@@ -10,7 +10,7 @@ namespace Library.Services.EmailServices
     //Сервис для отправки уведомлений
     public class EmailService
     {
-        public async Task SendEmailAsync(string email,string subject,string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             try
             {
@@ -18,7 +18,7 @@ namespace Library.Services.EmailServices
                 MailAddress to = new MailAddress(email);
                 MailMessage m = new MailMessage(from, to);
                 m.Subject = subject;
-                m.Body =message;
+                m.Body = message;
                 m.IsBodyHtml = true;
                 SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 25);
                 smtp.Credentials = new NetworkCredential("aa.d.m.i.n@yandex.ru", "Admin_Admin_1");
@@ -26,10 +26,10 @@ namespace Library.Services.EmailServices
                 Console.WriteLine(email);
                 await smtp.SendMailAsync(m);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }          
+            }
         }
     }
 }

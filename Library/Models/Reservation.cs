@@ -18,7 +18,7 @@ namespace Library.Models
 
         public DateTime DataBooking { get; set; }
 
-        public DateTime DataSend { get; set;}
+        public DateTime DataSend { get; set; }
 
         public ReserveState State { get; set; }
 

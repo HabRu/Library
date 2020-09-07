@@ -12,7 +12,7 @@ namespace Library.Models
         public DbSet<Reservation> Reservations { get; set; }
 
         public DbSet<FileModel> Files { get; set; }
-        
+
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Evaluation> Evaluations { get; set; }
@@ -40,7 +40,7 @@ namespace Library.Models
 
                 modelBuilder.InitializeData();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

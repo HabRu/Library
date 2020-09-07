@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace Library.Models
 {
-        public enum ReserveState
-        {
-            Booked,
-            Passed
-        }
+    public enum ReserveState
+    {
+        Booked,
+        Passed
+    }
 
 }

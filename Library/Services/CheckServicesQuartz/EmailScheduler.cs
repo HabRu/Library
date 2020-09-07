@@ -6,7 +6,7 @@ using System;
 
 namespace Library.Services.CheckServicesQuartz
 {
-    public class EmailScheduler 
+    public class EmailScheduler
     {
         public EmailScheduler(Type jobType, string cronExpression)
         {

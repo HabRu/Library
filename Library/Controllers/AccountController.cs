@@ -17,7 +17,7 @@ namespace Library.Controllers
         private RoleManager<IdentityRole> _roleManager;
         public EmailService emailService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager,EmailService email) 
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, EmailService email)
         {
             emailService = email;
             _roleManager = roleManager;
@@ -99,7 +99,7 @@ namespace Library.Controllers
         }
 
         //Get-контролер возврата страницы для регистрации 
-       [AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
@@ -115,16 +115,16 @@ namespace Library.Controllers
             {
                 //Если валидно то
                 //Создаем переменную для пользователя
-                User user = new User { Email = model.Email, UserName = model.Email,NameUser=model.Name };
+                User user = new User { Email = model.Email, UserName = model.Email, NameUser = model.Name };
                 //Добавляем в бд и хешируем пароль, и получаем result,который хранить состояние операции
-                var result = await _userManager.CreateAsync(user, model.Password); 
+                var result = await _userManager.CreateAsync(user, model.Password);
                 //#IF2:Если состояние операции Succeeded
                 if (result.Succeeded)
                 {
                     //Генерируем токен для подтверждения
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //Создаем ссылку для подтверждения
-                    var callbackUrl=Url.Action(
+                    var callbackUrl = Url.Action(
                         "ConfirmEmail",
                         "Account",
                         new { userId = user.Id, code = code },
@@ -147,7 +147,7 @@ namespace Library.Controllers
                     }
                 }
             }
-          
+
             return View(model);
         }
 

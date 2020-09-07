@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Library.Controllers
 {
     //Администрирование над пользователями
-    [Authorize(Roles ="admin")]
+    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
@@ -49,10 +49,10 @@ namespace Library.Controllers
             {
                 return NotFound();
             }
-            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email,Name=user.NameUser};
+            EditUserViewModel model = new EditUserViewModel { Id = user.Id, Email = user.Email, Name = user.NameUser };
             return View(model);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
@@ -63,7 +63,7 @@ namespace Library.Controllers
                 {
                     user.Email = model.Email;
                     user.UserName = model.Email;
-                    
+
 
                     var result = await _userManager.UpdateAsync(user);
                     if (result.Succeeded)

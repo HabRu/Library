@@ -8,7 +8,7 @@ namespace Library.Models
         NotAvailable,
         Booked,
         Passed
-        
+
     }
 
 }

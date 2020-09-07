@@ -13,9 +13,9 @@ namespace Library.ViewModels
         public string SelectedAuthor;
         public string SelectedGenre;
         public string SelectedPublisher;
-        public FilterViewModel(string title,string language,string author,string genre,string publisher)
+        public FilterViewModel(string title, string language, string author, string genre, string publisher)
         {
-           
+
             SelectedTitle = title;
             SelectedLanguage = language;
             SelectedAuthor = author;

@@ -32,7 +32,7 @@ namespace Library.Models
         public string Image { get; set; }
 
         public List<Tracking> TrackingList { get; set; }
-        
+
         public Book(string name)
         {
             Description = "Нет описания";

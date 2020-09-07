@@ -20,7 +20,7 @@ namespace Library.Controllers
         }
 
 
-      //Добавления пользователя в список для отслеживание книг
+        //Добавления пользователя в список для отслеживание книг
         [HttpGet]
         public IActionResult Track(int bookId)
         {
@@ -36,7 +36,7 @@ namespace Library.Controllers
         //Уаление пользователя от списка 
         public IActionResult UnTrace(int bookId)
         {
-            Tracking tracking = db.Trackings.FirstOrDefault((t) =>t.BookId == bookId && t.UserId == userManager.GetUserId(User));
+            Tracking tracking = db.Trackings.FirstOrDefault((t) => t.BookId == bookId && t.UserId == userManager.GetUserId(User));
             db.Trackings.Remove(tracking);
             db.SaveChanges();
             return RedirectToAction("ListBook", "Book");

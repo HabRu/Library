@@ -54,6 +54,6 @@ namespace Library
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-            }); 
-        }
+            });
+    }
 }

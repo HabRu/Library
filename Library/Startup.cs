@@ -25,7 +25,7 @@ namespace Library
 {
     public class Startup
     {
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -66,11 +66,11 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            
-            
+
+
 
             services.AddMvc();
-         
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,12 +85,12 @@ namespace Library
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-           
+
             app.UseRouting(); // используем систему маршрутизации
             app.UseAuthentication();
             app.UseAuthorization();
