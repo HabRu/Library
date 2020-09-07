@@ -1,6 +1,7 @@
 ﻿using Library.Models.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Library.Models
 {
@@ -27,11 +28,22 @@ namespace Library.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new BookConfigure())
-                        .ApplyConfiguration(new CommentConfigure())
-                        .ApplyConfiguration(new EvaluationConfigure())
-                        .ApplyConfiguration(new ReservationConfigure())
-                        .ApplyConfiguration(new TrackingConfigure());
+            try
+            {
+                modelBuilder.ApplyConfiguration(new BookConfigure())
+                            .ApplyConfiguration(new CommentConfigure())
+                            .ApplyConfiguration(new EvaluationConfigure())
+                            .ApplyConfiguration(new ReservationConfigure())
+                            .ApplyConfiguration(new TrackingConfigure());
+
+
+
+                modelBuilder.InitializeData();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             base.OnModelCreating(modelBuilder);
 

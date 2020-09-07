@@ -28,10 +28,10 @@ namespace Library.Services.CheckServices
         private readonly IEnumerable<EmailScheduler> _emailSchedules;
 
         public CheckService(
-            ISchedulerFactory schedulerFactory, 
-            EmailService emailService, 
+            ISchedulerFactory schedulerFactory,
+            EmailService emailService,
             IServiceScopeFactory serviceScopeFactory,
-            IOptions<Settings> settings, 
+            IOptions<Settings> settings,
             MessageForm message,
             IJobFactory jobFactory,
             IEnumerable<EmailScheduler> emailSchedulers)

@@ -13,6 +13,13 @@ namespace Library
         {
             string adminEmail = "admin@gmail.com";
             string password = "Admin_Admin_1";
+
+            string userEmail = "user@gmail.com";
+            string userPassword = "User_User_1";
+
+            string librarianEmail = "librarian@gmail.com";
+            string librarianPassword = "Librarian_Librarian_1";
+
             if (await roleManager.FindByNameAsync("admin") == null)
             {
                 await roleManager.CreateAsync(new IdentityRole("admin"));
@@ -32,6 +39,24 @@ namespace Library
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "admin");
+                }
+            }
+            if (await userManager.FindByNameAsync(userEmail) == null)
+            {
+                User user = new User { Email = userEmail, UserName = userEmail, EmailConfirmed = true };
+                IdentityResult result = await userManager.CreateAsync(user, userPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "user");
+                }
+            }
+            if (await userManager.FindByNameAsync(librarianEmail) == null)
+            {
+                User librarian = new User { Email = librarianEmail, UserName = librarianEmail, EmailConfirmed = true };
+                IdentityResult result = await userManager.CreateAsync(librarian, librarianPassword);
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(librarian, "librarian");
                 }
             }
         }

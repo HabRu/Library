@@ -9,6 +9,7 @@ using System.IO;
 using Library.Tag;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using System.Linq.Expressions;
 
 namespace Library.Controllers
 {
@@ -37,12 +38,12 @@ namespace Library.Controllers
         public async Task<IActionResult> AddBook(AddBookViewModel model)
         {
             //Создаем переменную книги
-            Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year,Publisher=model.Publisher, Genre = model.Genre,Status=Status.Available };
+            Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year, Publisher = model.Publisher, Genre = model.Genre, Status = Status.Available };
             //Если изображение не null,
             if (model.Image != null)
             {
-                
-                var path = "/images/"+model.Image.FileName;
+
+                var path = "/images/" + model.Image.FileName;
                 var contentPath = hostEnvironment.WebRootPath + path;
 
                 if (!System.IO.File.Exists(contentPath))
@@ -67,7 +68,7 @@ namespace Library.Controllers
             //Сохраняем изменения
             await db.SaveChangesAsync();
             //Возврат в начальную страницу
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
 
         }
 
@@ -77,25 +78,25 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteBook(int? id)
         {
-            
+
             Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == id);
             if (book != null)
             {
                 db.Books.Remove(book);
-              await  db.SaveChangesAsync();
+                await db.SaveChangesAsync();
             }
-                return RedirectToAction("ListBook");  
+            return RedirectToAction("ListBook");
         }
 
         //Контроллер для возрата книг(фильтрация по имени,языку,автору и жанру; пагинация)
         [AllowAnonymous]
         [Authorize]
-       public async Task<IActionResult> ListBook(string title,string language,string author,string genre,string publisher, int page=1,SortState sortOrder=SortState.NameAsc) 
+        public async Task<IActionResult> ListBook(string title, string language, string author, string genre, string publisher, int page = 1, SortState sortOrder = SortState.NameAsc)
         {
-            
+
             int pageSize = 7;
 
-            IQueryable<Book> Books = db.Books.Include(b=>b.TrackingList).ThenInclude(t=>t.User);
+            IQueryable<Book> Books = db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User);
 
             //BEGIN: Конвейр фильтраиции
             if (title != null)
@@ -114,7 +115,7 @@ namespace Library.Controllers
             {
                 Books = Books.Where(p => p.Genre.StartsWith(genre));
             }
-            if (publisher!=null)
+            if (publisher != null)
             {
                 Books = Books.Where(p => p.Publisher.StartsWith(publisher));
             }
@@ -124,7 +125,7 @@ namespace Library.Controllers
             switch (sortOrder)
             {
                 case SortState.NameDesc:
-                     Books= Books.OrderByDescending(s => s.Title);
+                    Books = Books.OrderByDescending(s => s.Title);
                     break;
                 case SortState.AuthorAsc:
                     Books = Books.OrderBy(s => s.Authtor);
@@ -143,7 +144,7 @@ namespace Library.Controllers
                     break;
                 case SortState.PubDesc:
                     Books = Books.OrderByDescending(s => s.Publisher);
-                    break;                    
+                    break;
                 default:
                     Books = Books.OrderBy(s => s.Title);
                     break;
@@ -157,8 +158,8 @@ namespace Library.Controllers
             {
                 PageViewModel = new PageViewModel(count, page, pageSize),
                 SortViewModel = new SortViewModel(sortOrder),
-                FilterViewModel = new FilterViewModel(title,language,author,genre,publisher),
-                Books= items
+                FilterViewModel = new FilterViewModel(title, language, author, genre, publisher),
+                Books = items
             };
             return View(viewModel);
         }
@@ -168,14 +169,14 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> GetThisBook(int? id)
         {
-            
-            Book book =await db.Books.Include(b=>b.Comments).Include(b=>b.Evaluation).Include(b=>b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
+
+            Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
             List<Comment> comment = book.Comments.ToList();
-            
+
             if (comment != null)
             {
                 //Сорртируем крментарри по времени
-                comment.OrderBy(c=>c.Id);
+                comment.OrderBy(c => c.Id);
                 book.Comments = comment;
             }
 
@@ -189,7 +190,7 @@ namespace Library.Controllers
         public async Task<IActionResult> AddComment(CommentViewModel comment)
         {
             Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == comment.BookId);
-            Comment Comment = new Comment { BookId = comment.BookId, NameUser = User.Identity.Name, CommentString = comment.CommentString, Book=book };
+            Comment Comment = new Comment { BookId = comment.BookId, NameUser = User.Identity.Name, CommentString = comment.CommentString, Book = book };
             db.Comments.Add(Comment);
             book.Comments.Add(Comment);
             db.Books.Update(book);
@@ -204,7 +205,7 @@ namespace Library.Controllers
             Evaluation Evaluation = db.Evaluations.FirstOrDefault(p => p.BookId == evaluation.BookId);
             if (Evaluation.Average == 0)
             {
-                Evaluation.Average =evaluation.Score;
+                Evaluation.Average = evaluation.Score;
             }
             else
             {
@@ -215,7 +216,7 @@ namespace Library.Controllers
             book.Evaluation = Evaluation;
             db.Evaluations.Update(Evaluation);
             db.Books.Update(book);
-            db.SaveChanges(); 
+            db.SaveChanges();
             return RedirectToAction("GetThisBook", new { id = evaluation.BookId });
         }
 
@@ -224,7 +225,7 @@ namespace Library.Controllers
         public IActionResult Edit(int? id)
         {
             Book book = db.Books.FirstOrDefault(p => p.Id == id);
-            EditBookViewModel editBookViewModel = new EditBookViewModel { Id=book.Id,Title = book.Title, Authtor = book.Authtor, Year = book.Year, Language = book.Language, Genre = book.Genre, Publisher=book.Publisher, Description = book.Description, Image = book.Image };
+            EditBookViewModel editBookViewModel = new EditBookViewModel { Id = book.Id, Title = book.Title, Authtor = book.Authtor, Year = book.Year, Language = book.Language, Genre = book.Genre, Publisher = book.Publisher, Description = book.Description, Image = book.Image };
             return View(editBookViewModel);
         }
 
@@ -245,6 +246,6 @@ namespace Library.Controllers
             db.SaveChanges();
             return RedirectToAction("GetThisBook", new { id = edit.Id });
         }
-       
+
     }
 }

@@ -14,14 +14,14 @@ namespace Library.Controllers
     {
         UserManager<User> _userManager;
         ApplicationContext db;
-        public UserPageController(ApplicationContext applicationContext,UserManager<User> user)
+        public UserPageController(ApplicationContext applicationContext, UserManager<User> user)
         {
             db = applicationContext;
             _userManager = user;
         }
         public IActionResult MyPage()
         {
-            User user =db.Users.Include(u=>u.ReservUser).FirstOrDefault(p=>p.Id==_userManager.GetUserId(User));
+            User user = db.Users.Include(u => u.ReservUser).FirstOrDefault(p => p.Id == _userManager.GetUserId(User));
             return View(user);
         }
     }

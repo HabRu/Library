@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200903082713_ChangeEvaluate")]
+    partial class ChangeEvaluate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,13 +67,12 @@ namespace Library.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 3,
                             Authtor = "Борис Акунин",
                             Description = "Детективный роман Бориса Акунина, действие которого разворачивается на фоне грозных событий войны 1812 года, является художественным приложением к седьмому тому проекта «История Российского государства». Такой пары сыщиков в истории криминального жанра, кажется, еще не было",
                             Genre = "Детектив",
-                            Image = "/images/миривойна.jpg",
+                            Image = "image/миривойна",
                             Language = "Русский",
-                            Publisher = "Литрес",
                             Status = 0,
                             Title = "Мир и война",
                             Year = 0
@@ -127,9 +128,9 @@ namespace Library.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 3,
                             Average = (byte)0,
-                            BookId = 1
+                            BookId = 3
                         });
                 });
 

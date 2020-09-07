@@ -13,7 +13,8 @@ namespace Library.Models.Configuration
         {
             builder.HasKey(b => b.Id);
 
-            builder.HasOne(b => b.Book).WithOne(b => b.Evaluation).HasForeignKey<Evaluation>(b=>b.BookId);
+            builder.HasOne(b => b.Book).WithOne(b => b.Evaluation).HasForeignKey<Evaluation>(e=>e.BookId);
+
 
             builder.ToTable("Evaluations");
         }

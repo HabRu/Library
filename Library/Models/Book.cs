@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
@@ -31,17 +32,25 @@ namespace Library.Models
         public string Image { get; set; }
 
         public List<Tracking> TrackingList { get; set; }
-
+        
+        public Book(string name)
+        {
+            Description = "Нет описания";
+            Comments = new List<Comment>();
+            TrackingList = new List<Tracking>();
+            Image = "/images/NoImage.jpg";
+        }
         public Book()
         {
             Description = "Нет описания";
             Comments = new List<Comment>();
             Evaluation = new Evaluation()
             {
+                Id = Id,
                 Average = 0,
                 BookId = Id,
                 Users = new List<string>()
-                
+
             };
             TrackingList = new List<Tracking>();
             Image = "/images/NoImage.jpg";
