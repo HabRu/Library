@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Library.Models;
+﻿using Library.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using Library.Services.EmailServices;
@@ -20,6 +13,10 @@ using Library.Services.CheckServicesQuartz;
 using Quartz.Spi;
 using Quartz;
 using Quartz.Impl;
+using AutoMapper;
+using Library.Services.BookContorlServices;
+using Library.Services.AccountControlServices;
+using Library.Services.RoleControlServices;
 
 namespace Library
 {
@@ -54,6 +51,9 @@ namespace Library
                 jobType: typeof(CheckJob),
                 cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?")); // run every 5 seconds
 
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -66,7 +66,9 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            services.AddScoped<IBookControlService, BookControlService>();
+            services.AddScoped<IAccountControlService, AccountControlService>();
+            services.AddScoped<IRoleControlService, RoleControlService>();
 
 
             services.AddMvc();

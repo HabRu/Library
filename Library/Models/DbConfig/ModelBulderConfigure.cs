@@ -18,7 +18,7 @@ namespace Library.Models
                 new Book[]
                 {
                     new Book("") {
-                        Id=1,
+                        Id=5,
                         Title = "Мир и война",
                         Authtor = "Борис Акунин",
                         Language = "Русский",
@@ -37,9 +37,9 @@ namespace Library.Models
                 {
                     new Evaluation()
                     {
-                        Id = 1,
+                        Id = 5,
                         Average = 0,
-                        BookId = 1,
+                        BookId = 5,
 
                     }
                 });

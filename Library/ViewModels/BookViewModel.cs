@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Library.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Library.Models
+namespace Library.ViewModels
 {
-    public class Book
+    public class BookViewModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -34,14 +36,7 @@ namespace Library.Models
 
         public List<Tracking> TrackingList { get; set; }
 
-        public Book(string name)
-        {
-            Description = "Нет описания";
-            Comments = new List<Comment>();
-            TrackingList = new List<Tracking>();
-            Image = "/images/NoImage.jpg";
-        }
-        public Book()
+        public BookViewModel()
         {
             Description = "Нет описания";
             Comments = new List<Comment>();

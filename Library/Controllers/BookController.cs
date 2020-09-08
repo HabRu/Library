@@ -1,27 +1,21 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Library.ViewModels;
-using System.IO;
-using Library.Tag;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using System.Linq.Expressions;
+using Library.Services.BookContorlServices;
 
 namespace Library.Controllers
 {
     public class BookController : Controller
     {
-        ApplicationContext db;
-        private readonly IWebHostEnvironment hostEnvironment;
+        private readonly IBookControlService bookControl;
 
-        public BookController(ApplicationContext applicationContext, IWebHostEnvironment hostEnvironment)
+        public BookController(IBookControlService bookControl)
         {
-            db = applicationContext;
-            this.hostEnvironment = hostEnvironment;
+            this.bookControl = bookControl;
         }
 
         //Get-контроллер.Возрат страницы для добавления книг
@@ -37,36 +31,33 @@ namespace Library.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBook(AddBookViewModel model)
         {
-            //Создаем переменную книги
-            Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year, Publisher = model.Publisher, Genre = model.Genre, Status = Status.Available };
-            //Если изображение не null,
-            if (model.Image != null)
-            {
+            #region
+            ////Создаем переменную книги
+            //Book book = new Book { Id = model.Id, Title = model.Title, Language = model.Language, Authtor = model.Authtor, Year = model.Year, Publisher = model.Publisher, Genre = model.Genre, Status = Status.Available };
+            ////Если изображение не null,
+            //if (model.Image != null)
+            //{
 
-                var path = "/images/" + model.Image.FileName;
-                var contentPath = hostEnvironment.WebRootPath + path;
+            //    var path = "/images/" + model.Image.FileName;
+            //    var contentPath = hostEnvironment.WebRootPath + path;
 
-                if (!System.IO.File.Exists(contentPath))
-                {
-                    using (var fileStream = new FileStream(contentPath, FileMode.Create))
-                    {
-                        await model.Image.CopyToAsync(fileStream);
-                    }
-                }
-                ////То сохраняем его в бд
-                //byte[] imageData = null;
-                //using(var binaryReader=new BinaryReader(model.Image.OpenReadStream()))
-                //{
-                //    imageData = binaryReader.ReadBytes((int)model.Image.Length);
-                //}
+            //    if (!System.IO.File.Exists(contentPath))
+            //    {
+            //        using (var fileStream = new FileStream(contentPath, FileMode.Create))
+            //        {
+            //            await model.Image.CopyToAsync(fileStream);
+            //        }
+            //    }
 
-                book.Image = path;
-            }
+            //    book.Image = path;
+            //}
 
-            //Добавляем книгу в бд
-            db.Books.Add(book);
-            //Сохраняем изменения
-            await db.SaveChangesAsync();
+            ////Добавляем книгу в бд
+            //db.Books.Add(book);
+            ////Сохраняем изменения
+            //await db.SaveChangesAsync();
+            #endregion
+            await bookControl.AddBook(model);
             //Возврат в начальную страницу
             return RedirectToAction("Index", "Home");
 
@@ -78,90 +69,93 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteBook(int? id)
         {
-
-            Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == id);
-            if (book != null)
-            {
-                db.Books.Remove(book);
-                await db.SaveChangesAsync();
-            }
+            #region Старая реализация
+            //Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == id);
+            //if (book != null)
+            //{
+            //    db.Books.Remove(book);
+            //    await db.SaveChangesAsync();
+            //}
+            #endregion
+            await bookControl.DeleteBook(id);
             return RedirectToAction("ListBook");
         }
 
-        //Контроллер для возрата книг(фильтрация по имени,языку,автору и жанру; пагинация)
+        //Контроллер для возрата книг(фильтрация по имени, языку, автору и жанру; пагинация)
         [AllowAnonymous]
         [Authorize]
-        public async Task<IActionResult> ListBook(string title, string language, string author, string genre, string publisher, int page = 1, SortState sortOrder = SortState.NameAsc)
+        public async Task<IActionResult> ListBook(BookFilterModel model)
         {
+            #region Старая реализация
+            //int pageSize = 7;
 
-            int pageSize = 7;
+            //IQueryable<Book> Books = db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User);
 
-            IQueryable<Book> Books = db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User);
+            ////BEGIN: Конвейр фильтраиции
+            //if (title != null)
+            //{
+            //    Books = Books.Where(p => p.Title.StartsWith(title));
+            //}
+            //if (language != null)
+            //{
+            //    Books = Books.Where(p => p.Language.StartsWith(language));
+            //}
+            //if (author != null)
+            //{
+            //    Books = Books.Where(p => p.Authtor.StartsWith(author));
+            //}
+            //if (genre != null)
+            //{
+            //    Books = Books.Where(p => p.Genre.StartsWith(genre));
+            //}
+            //if (publisher != null)
+            //{
+            //    Books = Books.Where(p => p.Publisher.StartsWith(publisher));
+            //}
+            ////END: Конвейр фильтраиции
 
-            //BEGIN: Конвейр фильтраиции
-            if (title != null)
-            {
-                Books = Books.Where(p => p.Title.StartsWith(title));
-            }
-            if (language != null)
-            {
-                Books = Books.Where(p => p.Language.StartsWith(language));
-            }
-            if (author != null)
-            {
-                Books = Books.Where(p => p.Authtor.StartsWith(author));
-            }
-            if (genre != null)
-            {
-                Books = Books.Where(p => p.Genre.StartsWith(genre));
-            }
-            if (publisher != null)
-            {
-                Books = Books.Where(p => p.Publisher.StartsWith(publisher));
-            }
-            //END: Конвейр фильтраиции
+            ////Сортировка книг
+            //switch (sortOrder)
+            //{
+            //    case SortState.NameDesc:
+            //        Books = Books.OrderByDescending(s => s.Title);
+            //        break;
+            //    case SortState.AuthorAsc:
+            //        Books = Books.OrderBy(s => s.Authtor);
+            //        break;
+            //    case SortState.AuthorDesc:
+            //        Books = Books.OrderByDescending(s => s.Authtor);
+            //        break;
+            //    case SortState.LangAsc:
+            //        Books = Books.OrderBy(s => s.Language);
+            //        break;
+            //    case SortState.LangDesc:
+            //        Books = Books.OrderByDescending(s => s.Language);
+            //        break;
+            //    case SortState.PubAsc:
+            //        Books = Books.OrderBy(s => s.Publisher);
+            //        break;
+            //    case SortState.PubDesc:
+            //        Books = Books.OrderByDescending(s => s.Publisher);
+            //        break;
+            //    default:
+            //        Books = Books.OrderBy(s => s.Title);
+            //        break;
+            //}
 
-            //Сортировка книг
-            switch (sortOrder)
-            {
-                case SortState.NameDesc:
-                    Books = Books.OrderByDescending(s => s.Title);
-                    break;
-                case SortState.AuthorAsc:
-                    Books = Books.OrderBy(s => s.Authtor);
-                    break;
-                case SortState.AuthorDesc:
-                    Books = Books.OrderByDescending(s => s.Authtor);
-                    break;
-                case SortState.LangAsc:
-                    Books = Books.OrderBy(s => s.Language);
-                    break;
-                case SortState.LangDesc:
-                    Books = Books.OrderByDescending(s => s.Language);
-                    break;
-                case SortState.PubAsc:
-                    Books = Books.OrderBy(s => s.Publisher);
-                    break;
-                case SortState.PubDesc:
-                    Books = Books.OrderByDescending(s => s.Publisher);
-                    break;
-                default:
-                    Books = Books.OrderBy(s => s.Title);
-                    break;
-            }
+            //var count = await Books.CountAsync();
+            //var items = await Books.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-            var count = await Books.CountAsync();
-            var items = await Books.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            // формируем модель представления
-            AllListBookViewModel viewModel = new AllListBookViewModel
-            {
-                PageViewModel = new PageViewModel(count, page, pageSize),
-                SortViewModel = new SortViewModel(sortOrder),
-                FilterViewModel = new FilterViewModel(title, language, author, genre, publisher),
-                Books = items
-            };
-            return View(viewModel);
+            //// формируем модель представления
+            //AllListBookViewModel viewModel = new AllListBookViewModel
+            //{
+            //    PageViewModel = new PageViewModel(count, page, pageSize),
+            //    SortViewModel = new SortViewModel(sortOrder),
+            //    FilterViewModel = new FilterViewModel(title, language, author, genre, publisher),
+            //    Books = items
+            //};\
+            #endregion
+            return View(await bookControl.ListBook(model));
         }
 
         //Get-контроллер. Для получения одной книги по id
@@ -169,54 +163,34 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> GetThisBook(int? id)
         {
+            #region Старая реализация
+            //Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
+            //List<Comment> comment = book.Comments.ToList();
 
-            Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
-            List<Comment> comment = book.Comments.ToList();
-
-            if (comment != null)
-            {
-                //Сорртируем крментарри по времени
-                comment.OrderBy(c => c.Id);
-                book.Comments = comment;
-            }
-
-            return View(book);
+            //if (comment != null)
+            //{
+            //    //Сорртируем крментарри по времени
+            //    comment.OrderBy(c => c.Id);
+            //    book.Comments = comment;
+            //}
+            #endregion
+            return View(await bookControl.GetThisBook(id));
 
         }
 
         //Post-контроллер.Добавление комментария
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddComment(CommentViewModel comment)
+        public async Task<IActionResult> AddComment(CommentViewModel comment, string UserName)
         {
-            Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == comment.BookId);
-            Comment Comment = new Comment { BookId = comment.BookId, NameUser = User.Identity.Name, CommentString = comment.CommentString, Book = book };
-            db.Comments.Add(Comment);
-            book.Comments.Add(Comment);
-            db.Books.Update(book);
-            await db.SaveChangesAsync();
+            await bookControl.AddComment(comment, User.Identity.Name);
             return RedirectToAction("GetThisBook", new { id = comment.BookId });
         }
 
         //Post-контроллер.Добавление оценки
-        public IActionResult AddEvaluation(EvaluationViewModel evaluation)
+        public async Task<IActionResult> AddEvaluation(EvaluationViewModel evaluation)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == evaluation.BookId);
-            Evaluation Evaluation = db.Evaluations.FirstOrDefault(p => p.BookId == evaluation.BookId);
-            if (Evaluation.Average == 0)
-            {
-                Evaluation.Average = evaluation.Score;
-            }
-            else
-            {
-                Evaluation.Average = (byte)((Evaluation.Average + evaluation.Score) / 2);
-            }
-            Evaluation.Users.Add(evaluation.user);
-            Evaluation.Book = book;
-            book.Evaluation = Evaluation;
-            db.Evaluations.Update(Evaluation);
-            db.Books.Update(book);
-            db.SaveChanges();
+            await bookControl.AddEvaluation(evaluation);
             return RedirectToAction("GetThisBook", new { id = evaluation.BookId });
         }
 
@@ -224,9 +198,7 @@ namespace Library.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == id);
-            EditBookViewModel editBookViewModel = new EditBookViewModel { Id = book.Id, Title = book.Title, Authtor = book.Authtor, Year = book.Year, Language = book.Language, Genre = book.Genre, Publisher = book.Publisher, Description = book.Description, Image = book.Image };
-            return View(editBookViewModel);
+            return View(bookControl.Edit(id));
         }
 
         //Post-контроллер. Редактирование информации о книг
@@ -234,16 +206,7 @@ namespace Library.Controllers
         [Authorize(Roles = "librarian")]
         public IActionResult Edit(EditBookViewModel edit)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == edit.Id);
-            book.Title = edit.Title;
-            book.Authtor = edit.Authtor;
-            book.Year = edit.Year;
-            book.Language = edit.Language;
-            book.Genre = edit.Genre;
-            book.Publisher = edit.Publisher;
-            book.Description = edit.Description;
-            db.Books.Update(book);
-            db.SaveChanges();
+            bookControl.Edit(edit);
             return RedirectToAction("GetThisBook", new { id = edit.Id });
         }
 

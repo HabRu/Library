@@ -1,4 +1,5 @@
 ﻿@using Library.Models
+@using Library.ViewModels
 
 @model Library.ViewModels.AllListBookViewModel
 <!--импортируем tag-хелперы проекта-->
@@ -13,25 +14,25 @@
             <tr>
                 <td>
                     <label class="control-label">Имя:</label>
-                    <input type="text" name="title" value="@Model.FilterViewModel.SelectedTitle" class="form-control" />
+                    <input type="text" name="Title" value="@Model.FilterViewModel.SelectedTitle" class="form-control" />
                 </td>
                 <td>
                     <label class="control-label">Язык</label>
-                    <input type="text" name="language" value="@Model.FilterViewModel.SelectedLanguage" class="form-control" />
+                    <input type="text" name="Language" value="@Model.FilterViewModel.SelectedLanguage" class="form-control" />
                 </td>
                 <td>
                     <label class="control-label">Автор</label>
-                    <input type="text" name="author" value="@Model.FilterViewModel.SelectedAuthor" class="form-control" />
+                    <input type="text" name="Author" value="@Model.FilterViewModel.SelectedAuthor" class="form-control" />
                 </td>
                 <td>
                     <label>Жанр</label>
-                    <input type="text" name="genre" value="@Model.FilterViewModel.SelectedGenre" class="form-control" />
+                    <input type="text" name="Genre" value="@Model.FilterViewModel.SelectedGenre" class="form-control" />
                 </td>
             </tr>
             <tr>
                 <td>
                     <label>Издатель</label>
-                    <input type="text" name="publisher" value="@Model.FilterViewModel.SelectedPublisher" class="form-control" />
+                    <input type="text" name="Publisher" value="@Model.FilterViewModel.SelectedPublisher" class="form-control" />
                 </td>
                 <td>
                     <input type="submit" value="Фильтр" class="btn btn-default" />
@@ -95,7 +96,7 @@
         </th>
         }
     </tr>
-    @foreach (Book u in Model.Books)
+    @foreach (BookViewModel u in Model.Books)
     {
         <tr>
             <td><a asp-action="GetThisBook" asp-controller="Book" asp-route-id="@u.Id">@u.Title</a></td>
