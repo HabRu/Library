@@ -32,6 +32,7 @@ namespace Library
                     //Миграция в бд
                     var db = services.GetRequiredService<ApplicationContext>();
                     db.Database.Migrate();
+                    
 
                     var userManager = services.GetRequiredService<UserManager<User>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();

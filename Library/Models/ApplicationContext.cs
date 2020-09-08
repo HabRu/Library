@@ -36,7 +36,12 @@ namespace Library.Models
                             .ApplyConfiguration(new ReservationConfigure())
                             .ApplyConfiguration(new TrackingConfigure());
 
-
+                modelBuilder.Entity<Book>()
+                    .Property(b => b.Id)
+                    .HasIdentityOptions(startValue: 5);
+                modelBuilder.Entity<Evaluation>()
+                    .Property(e => e.Id)
+                    .HasIdentityOptions(startValue: 5);
 
                 modelBuilder.InitializeData();
             }

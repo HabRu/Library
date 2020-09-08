@@ -18,7 +18,7 @@ namespace Library.Models
                 new Book[]
                 {
                     new Book("") {
-                        Id=5,
+                        Id=1,
                         Title = "Мир и война",
                         Authtor = "Борис Акунин",
                         Language = "Русский",
@@ -37,13 +37,14 @@ namespace Library.Models
                 {
                     new Evaluation()
                     {
-                        Id = 5,
+                        Id = 1,
                         Average = 0,
-                        BookId = 5,
+                        BookId = 1,
 
                     }
                 });
             });
+
 
         }
     }
