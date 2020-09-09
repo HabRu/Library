@@ -123,6 +123,10 @@ namespace Library.Services.BookContorlServices
         public async Task<BookViewModel> GetThisBook(int? id)
         {
             Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
+            if(book.Evaluation.Users == null){
+                book.Evaluation.Users = new List<string>();
+                db.SaveChanges();
+            }
             List<Comment> comment = book.Comments.ToList();
 
             if (comment != null)

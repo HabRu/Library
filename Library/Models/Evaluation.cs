@@ -18,11 +18,7 @@ namespace Library.Models
 
         public List<string> Users { get; set; }
 
-        public Evaluation()
-        {
-            Users = null;
-        }
-
+        
     }
 
 }

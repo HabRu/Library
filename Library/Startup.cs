@@ -76,7 +76,7 @@ namespace Library
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceScopeFactory serviceScope)
         {
             if (env.IsDevelopment())
             {
@@ -102,6 +102,7 @@ namespace Library
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.AddUsersAndRole(serviceScope);
         }
     }
 }

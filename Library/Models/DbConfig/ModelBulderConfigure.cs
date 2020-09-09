@@ -28,7 +28,23 @@ namespace Library.Models
                         Image = "/images/миривойна.jpg",
                     }
                 });
-
+            });
+            modelBuilder.Entity<Book>(b =>
+            {
+                b.HasData(
+                new Book[]
+                {
+                    new Book("") {
+                        Id=2,
+                        Title = "Цена вопросв",
+                        Authtor = "Александра Маринина",
+                        Language = "Русский",
+                        Genre = "Детектив",
+                        Publisher="Литрес",
+                        Description = "Программа против Cистемы. Системы всесильной и насквозь коррумпированной, на все имеющей цену и при этом ничего неспособной ценить по-настоящему. Возможно ли такое?",
+                        Image = "/images/ценавопроса.jpg",
+                    }
+                });
             });
 
             modelBuilder.Entity<Evaluation>(e =>
@@ -40,6 +56,20 @@ namespace Library.Models
                         Id = 1,
                         Average = 0,
                         BookId = 1,
+                        Users=new List<string>()
+                    }
+                }); ; ;
+            });
+            modelBuilder.Entity<Evaluation>(e =>
+            {
+                e.HasData(new Evaluation[]
+                {
+                    new Evaluation()
+                    {
+                        Id = 2,
+                        Average = 0,
+                        BookId = 2,
+                        Users=new List<string>()
 
                     }
                 });
