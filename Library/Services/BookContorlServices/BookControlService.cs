@@ -123,7 +123,8 @@ namespace Library.Services.BookContorlServices
         public async Task<BookViewModel> GetThisBook(int? id)
         {
             Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
-            if(book.Evaluation.Users == null){
+            if (book.Evaluation.Users == null)
+            {
                 book.Evaluation.Users = new List<string>();
                 db.SaveChanges();
             }
@@ -141,12 +142,16 @@ namespace Library.Services.BookContorlServices
         public AllListBookViewModel ListBook(BookFilterModel model)
         {
             IQueryable<BookViewModel> Books = mapper.Map<IEnumerable<BookViewModel>>(db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User)).AsQueryable();
+            //Books = Books.WhereIfNotWhiteOrNull(b =>b.Title.Contains(model.Title));
             Books = Books.WhereComplex(model);
             //END: Конвейр фильтраиции
 
             //Сортировка книг
             switch (model.SortOrder)
             {
+                case SortState.NameAsc:
+                    Books = Books.OrderBy(s => s.Title);
+                    break;
                 case SortState.NameDesc:
                     Books = Books.OrderByDescending(s => s.Title);
                     break;

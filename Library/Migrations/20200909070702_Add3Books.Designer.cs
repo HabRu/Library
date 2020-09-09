@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Library.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20200909070702_Add3Books")]
+    partial class Add3Books
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,19 +77,6 @@ namespace Library.Migrations
                             Publisher = "Литрес",
                             Status = 0,
                             Title = "Мир и война",
-                            Year = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Authtor = "Иван Петров",
-                            Description = "Эывыфвыфвыфвыфваыавы",
-                            Genre = "Комедия",
-                            Image = "/images/NoImage.jpg",
-                            Language = "Русский",
-                            Publisher = "Старт",
-                            Status = 0,
-                            Title = "Мир и дружба",
                             Year = 0
                         },
                         new
@@ -183,12 +172,6 @@ namespace Library.Migrations
                             Id = 3,
                             Average = (byte)0,
                             BookId = 3
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Average = (byte)0,
-                            BookId = 4
                         });
                 });
 

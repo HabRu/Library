@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Library.Models
 {
@@ -29,6 +24,43 @@ namespace Library.Models
                     }
                 });
             });
+
+            modelBuilder.Entity<Book>(b =>
+            {
+                b.HasData(
+                new Book[]
+                {
+                    new Book("") {
+                        Id=4,
+                        Title = "Мир и дружба",
+                        Authtor = "Иван Петров",
+                        Language = "Русский",
+                        Genre = "Комедия",
+                        Publisher="Старт",
+                        Description = "Эывыфвыфвыфвыфваыавы",
+                        Image = "/images/NoImage.jpg",
+                    }
+                });
+            });
+
+            modelBuilder.Entity<Book>(b =>
+            {
+                b.HasData(
+                new Book[]
+                {
+                    new Book("") {
+                        Id=5,
+                        Title = "Безмолвный пациент",
+                        Authtor = "Алекс Михаэлидес",
+                        Language = "Английский",
+                        Genre = "Триллер",
+                        Publisher="Эксмо",
+                        Description = "Когда художнице Алисии было тридцать три года, она убила своего мужа.С тех пор прошло шесть лет. За это время она не произнесла ни слова.",
+                        Image = "/images/безмолвпациент.jpg",
+                    }
+                });
+            });
+
             modelBuilder.Entity<Book>(b =>
             {
                 b.HasData(
@@ -47,6 +79,24 @@ namespace Library.Models
                 });
             });
 
+            modelBuilder.Entity<Book>(b =>
+            {
+                b.HasData(
+                new Book[]
+                {
+                    new Book("") {
+                        Id=3,
+                        Title = "Внутри убийцы",
+                        Authtor = "Майк Омер",
+                        Language = "Русский",
+                        Genre = "Детектив",
+                        Publisher="Литрес",
+                        Description = "На мосту в Чикаго, облокотившись на перила, стоит молодая красивая женщина. Очень бледная и очень грустная. Она неподвижно смотрит на темную воду, прикрывая ладонью плачущие глаза. И никому не приходит в голову, что",
+                        Image = "/images/внутриубийцы.jpg",
+                    }
+                });
+            });
+
             modelBuilder.Entity<Evaluation>(e =>
             {
                 e.HasData(new Evaluation[]
@@ -56,10 +106,10 @@ namespace Library.Models
                         Id = 1,
                         Average = 0,
                         BookId = 1,
-                        Users=new List<string>()
                     }
                 }); ; ;
             });
+
             modelBuilder.Entity<Evaluation>(e =>
             {
                 e.HasData(new Evaluation[]
@@ -69,12 +119,47 @@ namespace Library.Models
                         Id = 2,
                         Average = 0,
                         BookId = 2,
-                        Users=new List<string>()
-
+                    }
+                });
+            });
+            modelBuilder.Entity<Evaluation>(e =>
+            {
+                e.HasData(new Evaluation[]
+                {
+                    new Evaluation()
+                    {
+                        Id = 3,
+                        Average = 0,
+                        BookId = 3,
                     }
                 });
             });
 
+            modelBuilder.Entity<Evaluation>(e =>
+            {
+                e.HasData(new Evaluation[]
+                {
+                    new Evaluation()
+                    {
+                        Id = 4,
+                        Average = 0,
+                        BookId = 4,
+                    }
+                });
+            });
+
+            modelBuilder.Entity<Evaluation>(e =>
+            {
+                e.HasData(new Evaluation[]
+                {
+                    new Evaluation()
+                    {
+                        Id = 5,
+                        Average = 0,
+                        BookId = 5,
+                    }
+                });
+            });
 
         }
     }

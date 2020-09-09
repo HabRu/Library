@@ -31,8 +31,8 @@ namespace Library.Services.BookContorlServices.BookFilters
         {
             if (exp.Body is MethodCallExpression methodCall && methodCall.Object.Type.ToString() == "System.String")
             {
-                Console.WriteLine(methodCall.Arguments[0].ToString());
-                if (methodCall.Arguments[0].ToString().IsNullOrWhiteSpace())
+                string prop = Expression.Lambda((MemberExpression)(methodCall.Arguments[0])).Compile().DynamicInvoke() as string;
+                if (prop.IsNullOrWhiteSpace())
                     return set;
 
                 return set.Where(exp);

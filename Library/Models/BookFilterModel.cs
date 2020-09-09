@@ -22,7 +22,7 @@ namespace Library.Models
         {
             Page = 1;
             SortOrder = SortState.NameAsc;
-            PageSize = 5;
+            PageSize = 3;
         }
 
     }
