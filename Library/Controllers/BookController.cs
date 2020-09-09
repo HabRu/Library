@@ -84,7 +84,7 @@ namespace Library.Controllers
         //Контроллер для возрата книг(фильтрация по имени, языку, автору и жанру; пагинация)
         [AllowAnonymous]
         [Authorize]
-        public async Task<IActionResult> ListBook(BookFilterModel model)
+        public  IActionResult ListBook(BookFilterModel model)
         {
             #region Старая реализация
             //int pageSize = 7;
@@ -155,7 +155,7 @@ namespace Library.Controllers
             //    Books = items
             //};\
             #endregion
-            return View(await bookControl.ListBook(model));
+            return View(bookControl.ListBook(model));
         }
 
         //Get-контроллер. Для получения одной книги по id

@@ -8,7 +8,7 @@ namespace Library.Services.BookContorlServices
     {
         Task AddBook(AddBookViewModel model);
         Task DeleteBook(int? id);
-        Task<AllListBookViewModel> ListBook(BookFilterModel model);
+        AllListBookViewModel ListBook(BookFilterModel model);
         Task<BookViewModel> GetThisBook(int? id);
         Task AddComment(CommentViewModel comment, string NameUser);
         Task AddEvaluation(EvaluationViewModel evaluation);

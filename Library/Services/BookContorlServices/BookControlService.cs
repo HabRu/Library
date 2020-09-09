@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Models;
+using Library.Services.BookContorlServices.BookFilters;
 using Library.Tag;
 using Library.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -115,7 +116,7 @@ namespace Library.Services.BookContorlServices
         public EditBookViewModel Edit(int? id)
         {
             Book book = db.Books.FirstOrDefault(p => p.Id == id);
-            EditBookViewModel editBookViewModel =mapper.Map<EditBookViewModel>(book);
+            EditBookViewModel editBookViewModel = mapper.Map<EditBookViewModel>(book);
             return editBookViewModel;
         }
 
@@ -133,32 +134,10 @@ namespace Library.Services.BookContorlServices
             return mapper.Map<BookViewModel>(book);
         }
 
-        public async Task<AllListBookViewModel> ListBook(BookFilterModel model)
+        public AllListBookViewModel ListBook(BookFilterModel model)
         {
-
-            IQueryable<Book> Books = db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User);
-
-            //BEGIN: Конвейр фильтраиции
-            if (model.Title != null)
-            {
-                Books = Books.Where(p => p.Title.StartsWith(model.Title));
-            }
-            if (model.Language != null)
-            {
-                Books = Books.Where(p => p.Language.StartsWith(model.Language));
-            }
-            if (model.Authtor != null)
-            {
-                Books = Books.Where(p => p.Authtor.StartsWith(model.Authtor));
-            }
-            if (model.Genre != null)
-            {
-                Books = Books.Where(p => p.Genre.StartsWith(model.Genre));
-            }
-            if (model.Publisher != null)
-            {
-                Books = Books.Where(p => p.Publisher.StartsWith(model.Publisher));
-            }
+            IQueryable<BookViewModel> Books = mapper.Map<IEnumerable<BookViewModel>>(db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User)).AsQueryable();
+            Books = Books.WhereComplex(model);
             //END: Конвейр фильтраиции
 
             //Сортировка книг
@@ -190,8 +169,8 @@ namespace Library.Services.BookContorlServices
                     break;
             }
 
-            var count = await Books.CountAsync();
-            var items = await Books.Skip((model.Page - 1) * model.PageSize).Take(model.PageSize).ToListAsync();
+            var count = Books.Count();
+            var items = Books.Skip((model.Page - 1) * model.PageSize).Take(model.PageSize).ToList();
 
             // формируем модель представления
             AllListBookViewModel viewModel = new AllListBookViewModel
