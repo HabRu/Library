@@ -49,7 +49,7 @@ namespace Library
             services.AddSingleton<CheckJob>();
             services.AddSingleton(new EmailScheduler(
                 jobType: typeof(CheckJob),
-                cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?")); // run every 5 seconds
+                cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?")); 
 
 
             services.AddAutoMapper(typeof(Startup));

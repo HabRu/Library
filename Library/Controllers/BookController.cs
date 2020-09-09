@@ -20,7 +20,7 @@ namespace Library.Controllers
 
         //Get-контроллер.Возрат страницы для добавления книг
         //ДОСТУПНА ТОЛЬКО ДЛЯ РОЛИ "librarian"
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         [HttpGet]
         public IActionResult AddBook()
         {
@@ -65,7 +65,7 @@ namespace Library.Controllers
 
         //Контоллер для удаление книг по id
         //ДОСТУПНА ТОЛЬКО ДЛЯ РОЛИ "librarian"
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         [HttpGet]
         public async Task<IActionResult> DeleteBook(int? id)
         {
@@ -84,7 +84,7 @@ namespace Library.Controllers
         //Контроллер для возрата книг(фильтрация по имени, языку, автору и жанру; пагинация)
         [AllowAnonymous]
         [Authorize]
-        public  IActionResult ListBook(BookFilterModel model)
+        public IActionResult ListBook(BookFilterModel model)
         {
             #region Старая реализация
             //int pageSize = 7;
@@ -194,7 +194,7 @@ namespace Library.Controllers
             return RedirectToAction("GetThisBook", new { id = evaluation.BookId });
         }
 
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -203,7 +203,7 @@ namespace Library.Controllers
 
         //Post-контроллер. Редактирование информации о книг
         [HttpPost]
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         public IActionResult Edit(EditBookViewModel edit)
         {
             bookControl.Edit(edit);

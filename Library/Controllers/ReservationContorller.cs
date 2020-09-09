@@ -64,7 +64,7 @@ namespace Library.Controllers
             return await reservationControl.Refuse(id, this);
         }
         //Список всех резераций
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         public async Task<IActionResult> ListReserv()
         {
             IQueryable<Reservation> reservations = db.Reservations;
@@ -73,7 +73,7 @@ namespace Library.Controllers
         }
 
         //Контроллер для сдачи книги
-        [Authorize(Roles = "librarian")]
+        [Authorize(Roles = RolesConfig.librarian)]
         public async Task<IActionResult> Accept(int? id)
         {
             #region Старая реализация

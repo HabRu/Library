@@ -11,7 +11,7 @@ using Library.Services.RoleControlServices;
 namespace Library.Controllers
 {
     //Администрирование
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = RolesConfig.admin)]
     public class RolesController : Controller
     {
         RoleManager<IdentityRole> _roleManager;

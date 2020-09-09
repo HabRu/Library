@@ -46,12 +46,12 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Book" asp-action="ListBook">Книги</a></li>
-                    @if (User.IsInRole("admin"))
+                    @if (User.IsInRole(RolesConfig.admin))
                     {
                     <li><a asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a></li>
                     <li><a asp-controller="Roles" asp-action="Index">Роли</a></li>
                     }
-                    @if (User.IsInRole("librarian"))
+                    @if (User.IsInRole(RolesConfig.librarian))
                     {
                         <li><a asp-area="" asp-controller="Book" asp-action="AddBook">Добавить книгу</a></li>
                     <li><a asp-controller="Reservation" asp-action="ListReserv">Список бронь</a></li>

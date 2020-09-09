@@ -19,10 +19,6 @@ namespace Library.Services.CheckServices
     //Сервис для проверки не истек ли срок бронирования
     public class CheckService : IHostedService
     {
-        private readonly EmailService emailService;
-        private readonly IServiceScopeFactory serviceScopeFactory;
-        private readonly Settings settings;
-        private readonly MessageForm message;
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IJobFactory _jobFactory;
         private readonly IEnumerable<EmailScheduler> _emailSchedules;
@@ -36,9 +32,6 @@ namespace Library.Services.CheckServices
             IJobFactory jobFactory,
             IEnumerable<EmailScheduler> emailSchedulers)
         {
-            this.emailService = emailService;
-            this.serviceScopeFactory = serviceScopeFactory;
-            this.settings = settings.Value;
             this.message = message;
 
             _schedulerFactory = schedulerFactory;

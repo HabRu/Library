@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
 using Quartz.Util;
-using Library.Models;
 using System.Collections.Generic;
 
 namespace Library.Services.BookContorlServices.BookFilters

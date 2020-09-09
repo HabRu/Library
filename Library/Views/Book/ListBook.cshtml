@@ -89,7 +89,7 @@
                 </a>
         </th>
        
-        @if(User.IsInRole("librarian"))
+        @if(User.IsInRole(RolesConfig.librarian))
         {
         <th>
             Настройки
@@ -122,7 +122,7 @@
             </td>
             <td>
                 <p>
-                    @if (@User.IsInRole("librarian"))
+                    @if (@User.IsInRole(RolesConfig.librarian))
                     {
                         <a asp-controller="Book" asp-action="DeleteBook" asp-route-id="@u.Id">Удалить</a>
                     }
