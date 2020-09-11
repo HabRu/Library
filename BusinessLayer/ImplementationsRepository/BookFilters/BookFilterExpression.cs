@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
-using Quartz.Util;
 using System.Collections.Generic;
 
 namespace Library.Services.BookContorlServices.BookFilters
@@ -16,7 +15,7 @@ namespace Library.Services.BookContorlServices.BookFilters
 
             foreach (var prop in props)
             {
-                if (prop.PropertyType.ToString() == "System.String" && !(String.IsNullOrWhiteSpace(prop?.GetValue(element)?.ToString())))
+                if (prop.PropertyType == typeof(string) && !(String.IsNullOrWhiteSpace(prop?.GetValue(element)?.ToString())))
                 {
                     Expression<Func<TElement, bool>> lamda
                         = q => q.GetType().GetProperty(prop.Name).GetValue(q).ToString().Contains(element.GetType().GetProperty(prop.Name).GetValue(element).ToString());
@@ -26,18 +25,18 @@ namespace Library.Services.BookContorlServices.BookFilters
             }
             return outpuSets;
         }
+
         public static IQueryable<TElement> WhereIfNotWhiteOrNull<TElement>(this IQueryable<TElement> set, Expression<Func<TElement, bool>> exp)
         {
             if (exp.Body is MethodCallExpression methodCall && methodCall.Object.Type.ToString() == "System.String")
             {
                 string prop = Expression.Lambda((MemberExpression)(methodCall.Arguments[0])).Compile().DynamicInvoke() as string;
-                if (prop.IsNullOrWhiteSpace())
+                if (string.IsNullOrWhiteSpace(prop))
                     return set;
 
                 return set.Where(exp);
             }
             return set;
-
         }
     }
 }

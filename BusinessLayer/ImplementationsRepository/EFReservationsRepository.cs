@@ -1,24 +1,27 @@
 ﻿using Library.Models;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Library.Services.ReservationControlServices
 {
-    public class ReservationControlService : IReservationControlService
+    public class EFReservationsRepository : IReservationRepository
     {
         private readonly ApplicationContext db;
+
         private readonly EmailService emailService;
+
         private readonly MessageForm message;
+
         private readonly UserManager<User> _userManager;
 
-        public ReservationControlService(ApplicationContext db, EmailService emailService,
+        public EFReservationsRepository(ApplicationContext db, EmailService emailService,
                                         MessageForm message, UserManager<User> _userManager)
         {
             this.db = db;
@@ -26,7 +29,8 @@ namespace Library.Services.ReservationControlServices
             this.message = message;
             this._userManager = _userManager;
         }
-        public async Task Accept(int? id, Controller controller)
+
+        public async Task AcceptReserv(int? id)
         {
             Reservation reservation = db.Reservations.FirstOrDefault(p => p.Id == id);
             Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
@@ -34,27 +38,25 @@ namespace Library.Services.ReservationControlServices
             reservation.State = ReserveState.Passed;
             reservation.DataSend = System.DateTime.Now;
             await db.SaveChangesAsync();
-            
+
         }
 
-        public async Task CreateReserv(int? id, Controller controller)
+        public async Task CreateReserv(int? id, string userId)
         {
             Book book = db.Books.FirstOrDefault(p => p.Id == id);
-            if (controller.User.Identity.IsAuthenticated)
-            {
-                User user = db.Users.FirstOrDefault(p => p.Id == _userManager.GetUserId(controller.User));
-                Reservation reservation = new Reservation { BookIdentificator = book.Id, UserId = user.Id, UserName = user.UserName, User = user };
-                reservation.State = ReserveState.Booked;
-                reservation.DataBooking = System.DateTime.Now;
-                await db.Reservations.AddAsync(reservation);
-                book.Status = Status.Booked;
-                user.ReservUser.Add(reservation);
-                db.Books.Update(book);
-                await db.SaveChangesAsync();
-            }
+
+            User user = db.Users.FirstOrDefault(p => p.Id == userId);
+            Reservation reservation = new Reservation { BookIdentificator = book.Id, UserId = user.Id, UserName = user.UserName, User = user };
+            reservation.State = ReserveState.Booked;
+            reservation.DataBooking = System.DateTime.Now;
+            await db.Reservations.AddAsync(reservation);
+            book.Status = Status.Booked;
+            user.ReservUser.Add(reservation);
+            db.Books.Update(book);
+            await db.SaveChangesAsync();
         }
 
-        public async Task<IActionResult> Refuse(int? id, Controller controller)
+        public async Task DeleteReserv(int? id, string name, bool hasAccess)
         {
             Reservation reservation = db.Reservations.Include(r => r.User).FirstOrDefault(p => p.Id == id);
             User user = reservation.User;
@@ -69,7 +71,7 @@ namespace Library.Services.ReservationControlServices
             //Удаляем подписчиков
             db.Trackings.RemoveRange(trackings);
             //Проверка того,что пользователь авторизован
-            if (controller.User.IsInRole("library") || controller.User.Identity.Name == user.Email)
+            if (hasAccess || name == user.Email)
             {
                 //Удаление резирвации
                 book.Status = Status.Available;
@@ -77,17 +79,8 @@ namespace Library.Services.ReservationControlServices
                 user.ReservUser.Remove(reservation);
                 //Сохранение изменений
                 await db.SaveChangesAsync();
-                if (controller.User.IsInRole("librarian"))
-                {
-                    return controller.RedirectToAction("ListReserv");
-                }
-                else
-                {
-                    return controller.RedirectToAction("MyPage", "UserPage");
 
-                }
             }
-            return controller.RedirectToAction("ListReserv");
         }
     }
 }

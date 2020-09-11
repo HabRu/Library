@@ -11,7 +11,9 @@ namespace Library.Controllers
     [Authorize(Roles = RolesConfig.admin)]
     public class UsersController : Controller
     {
+
         UserManager<User> _userManager;
+
         public UsersController(UserManager<User> userManager)
         {
             _userManager = userManager;
@@ -42,6 +44,7 @@ namespace Library.Controllers
             }
             return View(model);
         }
+
         public async Task<IActionResult> Edit(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -92,6 +95,7 @@ namespace Library.Controllers
             }
             return RedirectToAction("Index");
         }
+
         public async Task<IActionResult> ChangePassword(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -102,6 +106,7 @@ namespace Library.Controllers
             ChangePasswordViewModel model = new ChangePasswordViewModel { Id = user.Id, Email = user.Email };
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {

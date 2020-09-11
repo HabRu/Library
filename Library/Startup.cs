@@ -15,8 +15,7 @@ using Quartz;
 using Quartz.Impl;
 using AutoMapper;
 using Library.Services.BookContorlServices;
-using Library.Services.AccountControlServices;
-using Library.Services.RoleControlServices;
+using Library.Services.ReservationControlServices;
 
 namespace Library
 {
@@ -66,10 +65,8 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddScoped<IBookControlService, BookControlService>();
-            services.AddScoped<IAccountControlService, AccountControlService>();
-            services.AddScoped<IRoleControlService, RoleControlService>();
-
+            services.AddScoped<IBooksRepository, EFBooksRepository>();
+            services.AddScoped<IReservationRepository, EFReservationsRepository>();
 
             services.AddMvc();
 

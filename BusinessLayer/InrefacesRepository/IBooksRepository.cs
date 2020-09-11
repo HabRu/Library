@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Library.Services.BookContorlServices
 {
-    public interface IBookControlService
+    public interface IBooksRepository
     {
-        Task AddBook(AddBookViewModel model);
+        Task AddBook(AddBookViewModel model, string pathWeb);
         Task DeleteBook(int? id);
         AllListBookViewModel ListBook(BookFilterModel model);
         Task<BookViewModel> GetThisBook(int? id);

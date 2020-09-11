@@ -10,6 +10,7 @@ namespace Library.Controllers
     public class HomeController : Controller
     {
         ApplicationContext db;
+
         public HomeController(ApplicationContext applicationContext)
         {
             db = applicationContext;
@@ -26,7 +27,6 @@ namespace Library.Controllers
             IndexViewModel indexViewModel = new IndexViewModel { NewBooks = NewBooks, TopBooks = TopBooks };
             return View(indexViewModel);
         }
-
 
         public IActionResult Privacy()
         {

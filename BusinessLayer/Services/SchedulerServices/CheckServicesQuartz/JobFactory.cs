@@ -4,7 +4,7 @@ using Quartz.Spi;
 
 namespace Library.Services.CheckServicesQuartz
 {
-    internal class JobFactory : IJobFactory
+    public class JobFactory : IJobFactory
     {
         protected readonly IServiceScopeFactory serviceScopeFactory;
 

@@ -1,16 +1,12 @@
 ﻿using Library.Models;
 using Library.Services.CheckServicesQuartz;
 using Library.Services.EmailServices;
-using Microsoft.CodeAnalysis.Options;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Spi;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,12 +24,9 @@ namespace Library.Services.CheckServices
             EmailService emailService,
             IServiceScopeFactory serviceScopeFactory,
             IOptions<Settings> settings,
-            MessageForm message,
             IJobFactory jobFactory,
             IEnumerable<EmailScheduler> emailSchedulers)
         {
-            this.message = message;
-
             _schedulerFactory = schedulerFactory;
             _emailSchedules = emailSchedulers;
             _jobFactory = jobFactory;

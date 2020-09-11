@@ -3,30 +3,28 @@ using Library.Models;
 using Library.Services.BookContorlServices.BookFilters;
 using Library.Tag;
 using Library.ViewModels;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace Library.Services.BookContorlServices
 {
-    public class BookControlService : IBookControlService
+    public class EFBooksRepository : IBooksRepository
     {
         private readonly ApplicationContext db;
-        private readonly IMapper mapper;
-        private readonly IWebHostEnvironment hostEnvironment;
 
-        public BookControlService(ApplicationContext db, IMapper mapper, IWebHostEnvironment hostEnvironment)
+        private readonly IMapper mapper;
+
+        public EFBooksRepository(ApplicationContext db, IMapper mapper)
         {
             this.db = db;
             this.mapper = mapper;
-            this.hostEnvironment = hostEnvironment;
         }
 
-        public async Task AddBook(AddBookViewModel model)
+        public async Task AddBook(AddBookViewModel model, string pathWeb)
         {
             //Создаем переменную книги
             Book book = mapper.Map<Book>(model);
@@ -36,7 +34,7 @@ namespace Library.Services.BookContorlServices
             {
 
                 var path = "/images/" + model.Image.FileName;
-                var contentPath = hostEnvironment.WebRootPath + path;
+                var contentPath = pathWeb + path;
 
                 if (!File.Exists(contentPath))
                 {
@@ -141,7 +139,7 @@ namespace Library.Services.BookContorlServices
 
         public AllListBookViewModel ListBook(BookFilterModel model)
         {
-            IQueryable<BookViewModel> Books = mapper.Map<IEnumerable<BookViewModel>>(db.Books.Include(b => b.TrackingList).ThenInclude(t => t.User)).AsQueryable();
+            IQueryable<BookViewModel> Books = mapper.ProjectTo<BookViewModel>(db.Books).AsQueryable();
             //Books = Books.WhereIfNotWhiteOrNull(b =>b.Title.Contains(model.Title));
             Books = Books.WhereComplex(model);
             //END: Конвейр фильтраиции

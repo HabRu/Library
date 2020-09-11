@@ -10,6 +10,7 @@ namespace Library.Controllers
     [Authorize]
     public class TrackingController : Controller
     {
+
         ApplicationContext db;
         UserManager<User> userManager;
 
@@ -18,7 +19,6 @@ namespace Library.Controllers
             this.db = _db;
             userManager = _userManager;
         }
-
 
         //Добавления пользователя в список для отслеживание книг
         [HttpGet]
@@ -33,6 +33,7 @@ namespace Library.Controllers
             db.SaveChanges();
             return RedirectToAction("ListBook", "Book");
         }
+
         //Уаление пользователя от списка 
         public IActionResult UnTrace(int bookId)
         {
