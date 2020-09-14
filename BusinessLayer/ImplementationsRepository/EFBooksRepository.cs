@@ -140,40 +140,10 @@ namespace Library.Services.BookContorlServices
         public AllListBookViewModel ListBook(BookFilterModel model)
         {
             IQueryable<BookViewModel> Books = mapper.ProjectTo<BookViewModel>(db.Books);
-            
+            //Фильтрация книг
             Books = Books.WhereComplex(model);
-
             //Сортировка книг
-            switch (model.SortOrder)
-            {
-                case SortState.NameAsc:
-                    Books = Books.OrderBy(s => s.Title);
-                    break;
-                case SortState.NameDesc:
-                    Books = Books.OrderByDescending(s => s.Title);
-                    break;
-                case SortState.AuthorAsc:
-                    Books = Books.OrderBy(s => s.Authtor);
-                    break;
-                case SortState.AuthorDesc:
-                    Books = Books.OrderByDescending(s => s.Authtor);
-                    break;
-                case SortState.LangAsc:
-                    Books = Books.OrderBy(s => s.Language);
-                    break;
-                case SortState.LangDesc:
-                    Books = Books.OrderByDescending(s => s.Language);
-                    break;
-                case SortState.PubAsc:
-                    Books = Books.OrderBy(s => s.Publisher);
-                    break;
-                case SortState.PubDesc:
-                    Books = Books.OrderByDescending(s => s.Publisher);
-                    break;
-                default:
-                    Books = Books.OrderBy(s => s.Title);
-                    break;
-            }
+            Books = Books.OrderByComplex(model.SortOrder);
 
             var count = Books.Count();
             var items = Books.Skip((model.Page - 1) * model.PageSize).Take(model.PageSize).ToList();

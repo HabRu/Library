@@ -7,13 +7,13 @@ namespace Library.Tag
 {
     public enum SortState
     {
-        NameAsc,
-        NameDesc,
-        AuthorAsc,
-        AuthorDesc,
-        LangAsc,
-        LangDesc,
-        PubAsc,
-        PubDesc
+        TitleAsc,
+        TitleDsc,
+        AuthtorAsc,
+        AuthtorDsc,
+        LanguageAsc,
+        LanguageDsc,
+        PublisherAsc,
+        PublisherDsc
     }
 }

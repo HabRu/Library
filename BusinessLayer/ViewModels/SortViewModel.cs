@@ -21,10 +21,10 @@ namespace Library.ViewModels
 
         public SortViewModel(SortState sortOrder)
         {
-            NameSort = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
-            AuthorSort = sortOrder == SortState.AuthorAsc ? SortState.AuthorDesc : SortState.AuthorAsc;
-            LangSort = sortOrder == SortState.LangAsc ? SortState.LangDesc : SortState.LangAsc;
-            PubSort = sortOrder == SortState.PubAsc ? SortState.PubDesc : SortState.PubAsc;
+            NameSort = sortOrder == SortState.TitleAsc ? SortState.TitleDsc : SortState.TitleAsc;
+            AuthorSort = sortOrder == SortState.AuthtorAsc ? SortState.AuthtorDsc : SortState.AuthtorAsc;
+            LangSort = sortOrder == SortState.LanguageAsc ? SortState.LanguageDsc : SortState.LanguageAsc;
+            PubSort = sortOrder == SortState.PublisherAsc ? SortState.PublisherDsc : SortState.PublisherAsc;
             Current = sortOrder;
 
 

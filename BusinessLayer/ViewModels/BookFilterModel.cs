@@ -16,7 +16,7 @@ namespace Library.Models
         public BookFilterModel()
         {
             Page = 1;
-            SortOrder = SortState.NameAsc;
+            SortOrder = SortState.TitleAsc;
             PageSize = 3;
         }
 

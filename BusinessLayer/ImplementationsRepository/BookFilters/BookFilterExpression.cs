@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using Microsoft.Net.Http.Headers;
+using Library.Tag;
 
 namespace Library.Services.BookContorlServices.BookFilters
 {
@@ -27,6 +28,23 @@ namespace Library.Services.BookContorlServices.BookFilters
                     set = set.Where(lambda);
                 }
             }
+
+            return set;
+        }
+
+        public static IQueryable<TElement> OrderByComplex<TElement>(this IQueryable<TElement> set, SortState element)
+        {
+            var sortState = element.ToString();
+            var isAsc = sortState.EndsWith("Asc");
+            var property = sortState.Remove(sortState.Length - 3);
+
+            var setParametrExpression = Expression.Parameter(typeof(TElement), "prop");
+            var returnProperty = Expression.Property(setParametrExpression, property);
+            var lambda = Expression.Lambda<Func<TElement, string>>(returnProperty, setParametrExpression);
+            if (isAsc)
+                set = set.OrderBy(lambda);
+            else
+                set = set.OrderByDescending(lambda);
 
             return set;
         }

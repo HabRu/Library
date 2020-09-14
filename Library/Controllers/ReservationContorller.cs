@@ -31,7 +31,7 @@ namespace Library.Controllers
 
             await reservationControl.DeleteReserv(id, User.Identity.Name, User.IsInRole(RolesConfig.librarian));
 
-            if (User.IsInRole("librarian"))
+            if (User.IsInRole(RolesConfig.librarian))
             {
                 return RedirectToAction("ListReserv");
             }
