@@ -139,10 +139,9 @@ namespace Library.Services.BookContorlServices
 
         public AllListBookViewModel ListBook(BookFilterModel model)
         {
-            IQueryable<BookViewModel> Books = mapper.ProjectTo<BookViewModel>(db.Books).AsQueryable();
-            //Books = Books.WhereIfNotWhiteOrNull(b =>b.Title.Contains(model.Title));
+            IQueryable<BookViewModel> Books = mapper.ProjectTo<BookViewModel>(db.Books);
+            
             Books = Books.WhereComplex(model);
-            //END: Конвейр фильтраиции
 
             //Сортировка книг
             switch (model.SortOrder)
