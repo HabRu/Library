@@ -132,7 +132,7 @@
                     }
                     else if ((u.Status == Status.Booked || u.Status == Status.Passed) && User.Identity.IsAuthenticated)
                     {
-                        @if (u.TrackingList.FirstOrDefault(t => User.Identity.Name == t.User.Email) == null)
+                        @if (Model.Trackings.FirstOrDefault(t => ViewBag.userId == t.UserId) == null)
                         {
                             
                             <a asp-action="Track" asp-controller="Tracking" asp-route-bookId="@u.Id">Отслеживать</a>

@@ -15,5 +15,7 @@ namespace Library.ViewModels
         public FilterViewModel FilterViewModel { get; set; }
 
         public SortViewModel SortViewModel { get; set; }
+
+        public List<Tracking> Trackings { get; set; }
     }
 }

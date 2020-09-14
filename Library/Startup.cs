@@ -16,6 +16,8 @@ using Quartz.Impl;
 using AutoMapper;
 using Library.Services.BookContorlServices;
 using Library.Services.ReservationControlServices;
+using BusinessLayer.InrefacesRepository;
+using BusinessLayer.ImplementationsRepository;
 
 namespace Library
 {
@@ -67,6 +69,7 @@ namespace Library
 
             services.AddScoped<IBooksRepository, EFBooksRepository>();
             services.AddScoped<IReservationRepository, EFReservationsRepository>();
+            services.AddScoped<ITrackingsRepository, EFTrackingsRepository>();
 
             services.AddMvc();
 

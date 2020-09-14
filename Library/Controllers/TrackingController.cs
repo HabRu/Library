@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BusinessLayer.InrefacesRepository;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,36 +11,27 @@ namespace Library.Controllers
     [Authorize]
     public class TrackingController : Controller
     {
-
-        ApplicationContext db;
         UserManager<User> userManager;
+        private readonly ITrackingsRepository trackingsRepostiroy;
 
-        public TrackingController(ApplicationContext _db, UserManager<User> _userManager)
+        public TrackingController(UserManager<User> _userManager, ITrackingsRepository trackingsRepostiroy)
         {
-            this.db = _db;
             userManager = _userManager;
+            this.trackingsRepostiroy = trackingsRepostiroy;
         }
 
         //Добавления пользователя в список для отслеживание книг
         [HttpGet]
         public IActionResult Track(int bookId)
         {
-            Tracking tracking = new Tracking
-            {
-                BookId = bookId,
-                UserId = userManager.GetUserId(User)
-            };
-            db.Trackings.Add(tracking);
-            db.SaveChanges();
+            trackingsRepostiroy.Add(bookId, userManager.GetUserId(User));
             return RedirectToAction("ListBook", "Book");
         }
 
         //Уаление пользователя от списка 
         public IActionResult UnTrace(int bookId)
         {
-            Tracking tracking = db.Trackings.FirstOrDefault((t) => t.BookId == bookId && t.UserId == userManager.GetUserId(User));
-            db.Trackings.Remove(tracking);
-            db.SaveChanges();
+            trackingsRepostiroy.Delete(bookId, userManager.GetUserId(User));
             return RedirectToAction("ListBook", "Book");
         }
 

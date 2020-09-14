@@ -5,6 +5,9 @@ using Library.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Library.Services.BookContorlServices;
 using Microsoft.AspNetCore.Hosting;
+using BusinessLayer.InrefacesRepository;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace Library.Controllers
 {
@@ -14,10 +17,16 @@ namespace Library.Controllers
 
         private readonly IWebHostEnvironment env;
 
-        public BookController(IBooksRepository bookControl, IWebHostEnvironment env)
+        private readonly ITrackingsRepository trackings;
+
+        private readonly UserManager<User> userManager;
+
+        public BookController(IBooksRepository bookControl, IWebHostEnvironment env, ITrackingsRepository trackings, UserManager<User> userManager)
         {
             this.bookControl = bookControl;
             this.env = env;
+            this.trackings = trackings;
+            this.userManager = userManager;
         }
 
         //Get-контроллер.Возрат страницы для добавления книг
@@ -54,7 +63,13 @@ namespace Library.Controllers
         [Authorize]
         public IActionResult ListBook(BookFilterModel model)
         {
-            return View(bookControl.ListBook(model));
+            AllListBookViewModel modelBooks = bookControl.ListBook(model);
+            if (User.Identity.IsAuthenticated) {
+                modelBooks.Trackings = trackings.GetTrackingsByUserId(userManager.GetUserId(User)).ToList();
+                ViewBag.userId = userManager.GetUserId(User);
+            }
+            
+            return View(modelBooks);
         }
 
         //Get-контроллер. Для получения одной книги по id

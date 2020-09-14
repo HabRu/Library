@@ -154,7 +154,7 @@ namespace Library.Services.BookContorlServices
                 PageViewModel = new PageViewModel(count, model.Page, model.PageSize),
                 SortViewModel = new SortViewModel(model.SortOrder),
                 FilterViewModel = new FilterViewModel(model.Title, model.Language, model.Authtor, model.Genre, model.Publisher),
-                Books = mapper.Map<IEnumerable<BookViewModel>>(items)
+                Books = items.ToList()
             };
             return viewModel;
         }
