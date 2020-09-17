@@ -26,10 +26,6 @@ namespace Library.ViewModels
             LangSort = sortOrder == SortState.LanguageAsc ? SortState.LanguageDsc : SortState.LanguageAsc;
             PubSort = sortOrder == SortState.PublisherAsc ? SortState.PublisherDsc : SortState.PublisherAsc;
             Current = sortOrder;
-
-
-
-
         }
     }
 }

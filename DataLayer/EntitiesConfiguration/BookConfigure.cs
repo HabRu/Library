@@ -15,9 +15,7 @@ namespace Library.Models.Configuration
             builder.Property(b => b.Title).IsRequired().HasMaxLength(50);
             builder.Property(b => b.Authtor).IsRequired().HasMaxLength(50);
 
-
             builder.ToTable("Books");
-
         }
     }
 }

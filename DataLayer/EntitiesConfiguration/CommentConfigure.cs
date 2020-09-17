@@ -16,7 +16,6 @@ namespace Library.Models.Configuration
             builder.HasOne(b => b.Book).WithMany(b => b.Comments).HasForeignKey(c => c.BookId);
 
             builder.ToTable("Comments");
-
         }
     }
 }

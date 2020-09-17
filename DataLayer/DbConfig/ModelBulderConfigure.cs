@@ -6,7 +6,6 @@ namespace Library.Models
     {
         public static void InitializeData(this ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Book>(b =>
             {
                 b.HasData(

@@ -36,7 +36,6 @@ namespace Library
                     var logger = services.GetRequiredService<ILogger>();
                     logger.LogError(ex, "An error occurred while seeding the database.");
                 }
-
             }
         }
     }

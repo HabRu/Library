@@ -1,12 +1,16 @@
 ﻿using Library.Models.Configuration;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Library.Models
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
+
+        private readonly ILogger<ApplicationContext> logger;
+
         public DbSet<Book> Books { get; set; }
 
         public DbSet<Reservation> Reservations { get; set; }
@@ -19,9 +23,10 @@ namespace Library.Models
 
         public DbSet<Tracking> Trackings { get; set; }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options, ILogger<ApplicationContext> logger)
             : base(options)
         {
+            this.logger = logger;
             //Миграция в бд
             //Database.Migrate();
         }
@@ -47,7 +52,7 @@ namespace Library.Models
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                logger.LogError(ex.Message);
             }
 
             base.OnModelCreating(modelBuilder);

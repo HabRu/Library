@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -35,7 +33,7 @@ namespace Library.Services.EmailServices
             }
             catch (Exception ex)
             {
-                logger.LogDebug(ex.Message);
+                logger.LogError(ex.Message);
             }
         }
     }
