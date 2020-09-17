@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,12 @@ namespace Library.Services.EmailServices
     //Сервис для отправки уведомлений
     public class EmailService
     {
+        private readonly ILogger<EmailService> logger;
+
+        public EmailService(ILogger<EmailService> logger)
+        {
+            this.logger = logger;
+        }
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             try
@@ -23,12 +30,12 @@ namespace Library.Services.EmailServices
                 SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 25);
                 smtp.Credentials = new NetworkCredential("aa.d.m.i.n@yandex.ru", "Admin_Admin_1");
                 smtp.EnableSsl = true;
-                Console.WriteLine(email);
+                logger.LogDebug(email);
                 await smtp.SendMailAsync(m);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                logger.LogDebug(ex.Message);
             }
         }
     }

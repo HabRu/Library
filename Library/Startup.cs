@@ -23,21 +23,19 @@ namespace Library
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<EmailService>();
-            services.AddSingleton<Settings>();
-            services.AddSingleton<MessageForm>();
-            services.AddHostedService<CheckService>();
+            services.AddTransient<EmailService>();
+            services.AddTransient<Settings>();
+            services.AddTransient<MessageForm>();
+            services.AddHostedService<StartEmailService>();
 
             //Передаем конфигурацию 'EmailServiceSettings' через IOptions
             services.Configure<Settings>(Configuration.GetSection("EmailServiceSettings"));
@@ -67,9 +65,9 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddScoped<IBooksRepository, EFBooksRepository>();
-            services.AddScoped<IReservationRepository, EFReservationsRepository>();
-            services.AddScoped<ITrackingsRepository, EFTrackingsRepository>();
+            services.AddTransient<IBooksRepository, EFBooksRepository>();
+            services.AddTransient<IReservationRepository, EFReservationsRepository>();
+            services.AddTransient<ITrackingsRepository, EFTrackingsRepository>();
 
             services.AddMvc();
 

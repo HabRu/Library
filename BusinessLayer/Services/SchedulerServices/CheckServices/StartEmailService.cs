@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 namespace Library.Services.CheckServices
 {
     //Сервис для проверки не истек ли срок бронирования
-    public class CheckService : IHostedService
+    public class StartEmailService : IHostedService
     {
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IJobFactory _jobFactory;
         private readonly IEnumerable<EmailScheduler> _emailSchedules;
 
-        public CheckService(
+        public StartEmailService(
             ISchedulerFactory schedulerFactory,
             EmailService emailService,
             IServiceScopeFactory serviceScopeFactory,
