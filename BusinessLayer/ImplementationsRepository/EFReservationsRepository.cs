@@ -1,12 +1,9 @@
 ﻿using Library.Models;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Library.Services.ReservationControlServices

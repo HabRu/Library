@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
-using System.Collections.Generic;
-using Microsoft.Net.Http.Headers;
 using Library.Tag;
 
 namespace Library.Services.BookContorlServices.BookFilters

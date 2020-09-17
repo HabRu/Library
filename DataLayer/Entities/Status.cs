@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Library.Models
+﻿namespace Library.Models
 {
     public enum Status
     {

@@ -1,5 +1,4 @@
-﻿
-namespace Library.Models
+﻿namespace Library.Models
 {
     public class Tracking
     {

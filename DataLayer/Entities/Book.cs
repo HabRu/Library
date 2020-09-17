@@ -41,6 +41,7 @@ namespace Library.Models
             TrackingList = new List<Tracking>();
             Image = "/images/NoImage.jpg";
         }
+
         public Book()
         {
             Description = "Нет описания";

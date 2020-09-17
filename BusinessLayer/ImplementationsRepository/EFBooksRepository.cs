@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using Library.Models;
 using Library.Services.BookContorlServices.BookFilters;
-using Library.Tag;
 using Library.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using System.IO;
 
 namespace Library.Services.BookContorlServices

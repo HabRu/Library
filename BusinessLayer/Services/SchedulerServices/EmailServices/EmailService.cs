@@ -15,6 +15,7 @@ namespace Library.Services.EmailServices
         {
             this.logger = logger;
         }
+
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             try
