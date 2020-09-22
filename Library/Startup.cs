@@ -48,7 +48,7 @@ namespace Library
             services.AddSingleton<CheckJob>();
             services.AddSingleton(new EmailScheduler(
                 jobType: typeof(CheckJob),
-                cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?")); 
+                cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?"));
 
 
             services.AddAutoMapper(typeof(Startup));
@@ -65,10 +65,12 @@ namespace Library
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddTransient<DbContext, ApplicationContext>();
+            services.AddTransient<IRepository, Repository>();
             services.AddTransient<IBooksRepository, EFBooksRepository>();
             services.AddTransient<IReservationRepository, EFReservationsRepository>();
             services.AddTransient<ITrackingsRepository, EFTrackingsRepository>();
-
+            
             services.AddMvc();
 
         }

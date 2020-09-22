@@ -6,7 +6,6 @@
         NotAvailable,
         Booked,
         Passed
-
     }
 
 }

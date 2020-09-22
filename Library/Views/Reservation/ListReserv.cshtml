@@ -46,7 +46,7 @@
 
                     <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Убрать бронь</a></p>
                 }
-                else if(User.IsInRole(RolesConfig.librarian))
+                else if(User.IsInRole(RolesConfig.LIBRARIAN))
                 {
                 <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Возврат книги</a></p>
                 }

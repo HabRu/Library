@@ -1,4 +1,6 @@
-﻿using Library.Models;
+﻿using BusinessLayer.ImplementationsRepository;
+using BusinessLayer.InrefacesRepository;
+using Library.Models;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +12,7 @@ namespace Library.Services.ReservationControlServices
 {
     public class EFReservationsRepository : IReservationRepository
     {
-        private readonly ApplicationContext db;
+        private readonly IRepository db;
 
         private readonly EmailService emailService;
 
@@ -18,7 +20,7 @@ namespace Library.Services.ReservationControlServices
 
         private readonly UserManager<User> _userManager;
 
-        public EFReservationsRepository(ApplicationContext db, EmailService emailService,
+        public EFReservationsRepository(IRepository db, EmailService emailService,
                                         MessageForm message, UserManager<User> _userManager)
         {
             this.db = db;
@@ -34,7 +36,7 @@ namespace Library.Services.ReservationControlServices
             book.Status = Status.Available;
             reservation.State = ReserveState.Passed;
             reservation.DataSend = System.DateTime.Now;
-            await db.SaveChangesAsync();
+            await db.DbContext.SaveChangesAsync();
 
         }
 
@@ -50,7 +52,7 @@ namespace Library.Services.ReservationControlServices
             book.Status = Status.Booked;
             user.ReservUser.Add(reservation);
             db.Books.Update(book);
-            await db.SaveChangesAsync();
+            await db.DbContext.SaveChangesAsync();
         }
 
         public async Task DeleteReserv(int? id, string name, bool hasAccess)
@@ -75,7 +77,7 @@ namespace Library.Services.ReservationControlServices
                 db.Reservations.Remove(reservation);
                 user.ReservUser.Remove(reservation);
                 //Сохранение изменений
-                await db.SaveChangesAsync();
+                await db.DbContext.SaveChangesAsync();
 
             }
         }

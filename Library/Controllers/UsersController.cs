@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Library.Controllers
 {
     //Администрирование над пользователями
-    [Authorize(Roles = RolesConfig.admin)]
+    [Authorize(Roles = RolesConfig.ADMIN)]
     public class UsersController : Controller
     {
 

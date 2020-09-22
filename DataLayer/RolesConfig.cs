@@ -2,8 +2,8 @@
 {
     public static class RolesConfig
     {
-        public const string admin = "admin";
-        public const string librarian = "librarian";
-        public const string user = "user";
+        public const string ADMIN = "admin";
+        public const string LIBRARIAN = "librarian";
+        public const string USER = "user";
     }
 }

@@ -7,9 +7,9 @@ namespace BusinessLayer.ImplementationsRepository
 {
     public class EFTrackingsRepository : ITrackingsRepository
     {
-        private readonly ApplicationContext db;
+        private readonly IRepository db;
 
-        public EFTrackingsRepository(ApplicationContext db)
+        public EFTrackingsRepository(IRepository db)
         {
             this.db = db;
         }
@@ -21,14 +21,14 @@ namespace BusinessLayer.ImplementationsRepository
                 UserId = userId
             };
             await db.Trackings.AddAsync(tracking);
-            db.SaveChanges();
+            db.DbContext.SaveChanges();
         }
 
         public  void Delete(int bookId, string userId)
         {
             Tracking tracking = db.Trackings.FirstOrDefault((t) => t.BookId == bookId && t.UserId == userId);
             db.Trackings.Remove(tracking);
-            db.SaveChanges();
+            db.DbContext.SaveChanges();
         }
 
         public IEnumerable<Tracking> GetTrackingsByUserId(string userId)

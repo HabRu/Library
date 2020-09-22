@@ -12,7 +12,7 @@ namespace Library.Controllers
     [Authorize]
     public class UserPageController : Controller
     {
-        UserManager<User> _userManager;
+        readonly UserManager<User> _userManager;
         ApplicationContext db;
         public UserPageController(ApplicationContext applicationContext, UserManager<User> user)
         {

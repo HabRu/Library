@@ -4,12 +4,14 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Library.Models;
 using Library.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Library.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationContext db;
+        readonly ApplicationContext db;
 
         public HomeController(ApplicationContext applicationContext)
         {
@@ -17,14 +19,16 @@ namespace Library.Controllers
         }
 
         //Контроллер начальной страницы
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Book> books = db.Books.ToList();
+            IQueryable<Book> booksQuery = db.Books;
             //Возвращает новые книги
-            List<Book> NewBooks = books.TakeLast(2).ToList();
+            IList<Book> newBooks = await booksQuery.OrderBy(b => b.Id).Take(3).ToListAsync();
             //Возвращает популярные книги
-            List<Book> TopBooks = books.OrderBy(p => p.Evaluation.Average).TakeLast(3).ToList();
-            IndexViewModel indexViewModel = new IndexViewModel { NewBooks = NewBooks, TopBooks = TopBooks };
+            IList<Book> topBooks = await booksQuery.OrderByDescending(p => p.Evaluation.Average)
+                .Take(3)
+                .ToListAsync();
+            IndexViewModel indexViewModel = new IndexViewModel { NewBooks = (List<Book>)newBooks, TopBooks = (List<Book>)topBooks };
             return View(indexViewModel);
         }
 

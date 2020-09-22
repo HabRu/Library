@@ -11,7 +11,7 @@ namespace Library.Controllers
 {
     public class ReservationController : Controller
     {
-        ApplicationContext db;
+        private readonly ApplicationContext db;
 
         private readonly IReservationRepository reservationControl;
 
@@ -29,9 +29,9 @@ namespace Library.Controllers
         public async Task<IActionResult> Refuse(int? id)
         {
 
-            await reservationControl.DeleteReserv(id, User.Identity.Name, User.IsInRole(RolesConfig.librarian));
+            await reservationControl.DeleteReserv(id, User.Identity.Name, User.IsInRole(RolesConfig.LIBRARIAN));
 
-            if (User.IsInRole(RolesConfig.librarian))
+            if (User.IsInRole(RolesConfig.LIBRARIAN))
             {
                 return RedirectToAction("ListReserv");
             }
@@ -39,7 +39,7 @@ namespace Library.Controllers
         }
 
         //Список всех резераций
-        [Authorize(Roles = RolesConfig.librarian)]
+        [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> ListReserv()
         {
             IQueryable<Reservation> reservations = db.Reservations;
@@ -48,7 +48,7 @@ namespace Library.Controllers
         }
 
         //Контроллер для сдачи книги
-        [Authorize(Roles = RolesConfig.librarian)]
+        [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> Accept(int? id)
         {
             await reservationControl.CreateReserv(id, userManager.GetUserId(User));

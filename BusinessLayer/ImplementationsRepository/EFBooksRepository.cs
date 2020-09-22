@@ -7,19 +7,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Extensions.Configuration;
+using BusinessLayer.InrefacesRepository;
 
 namespace Library.Services.BookContorlServices
 {
     public class EFBooksRepository : IBooksRepository
     {
-        private readonly ApplicationContext db;
+        private readonly IRepository db;
 
         private readonly IMapper mapper;
 
-        public EFBooksRepository(ApplicationContext db, IMapper mapper)
+        private readonly IConfiguration configuration;
+
+        public EFBooksRepository(IRepository db, IMapper mapper, IConfiguration configuration)
         {
             this.db = db;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         public async Task AddBook(AddBookViewModel model, string pathWeb)
@@ -31,15 +36,13 @@ namespace Library.Services.BookContorlServices
             if (model.Image != null)
             {
 
-                var path = "/images/" + model.Image.FileName;
+                var path = configuration.GetValue<string>("ImagePath") + model.Image.FileName;
                 var contentPath = pathWeb + path;
 
                 if (!File.Exists(contentPath))
                 {
-                    using (var fileStream = new FileStream(contentPath, FileMode.Create))
-                    {
-                        await model.Image.CopyToAsync(fileStream);
-                    }
+                    using var fileStream = new FileStream(contentPath, FileMode.Create);
+                    await model.Image.CopyToAsync(fileStream);
                 }
 
                 book.Image = path;
@@ -48,7 +51,7 @@ namespace Library.Services.BookContorlServices
             //Добавляем книгу в бд
             db.Books.Add(book);
             //Сохраняем изменения
-            await db.SaveChangesAsync();
+            await db.DbContext.SaveChangesAsync();
         }
 
         public async Task AddComment(CommentViewModel comment, string NameUser)
@@ -60,7 +63,7 @@ namespace Library.Services.BookContorlServices
             db.Comments.Add(Comment);
             book.Comments.Add(Comment);
             db.Books.Update(book);
-            await db.SaveChangesAsync();
+            await db.DbContext.SaveChangesAsync();
         }
 
 
@@ -81,7 +84,7 @@ namespace Library.Services.BookContorlServices
             book.Evaluation = Evaluation;
             db.Evaluations.Update(Evaluation);
             db.Books.Update(book);
-            await db.SaveChangesAsync();
+            await db.DbContext.SaveChangesAsync();
 
         }
 
@@ -91,7 +94,7 @@ namespace Library.Services.BookContorlServices
             if (book != null)
             {
                 db.Books.Remove(book);
-                await db.SaveChangesAsync();
+                await db.DbContext.SaveChangesAsync();
             }
         }
 
@@ -106,7 +109,7 @@ namespace Library.Services.BookContorlServices
             book.Publisher = edit.Publisher;
             book.Description = edit.Description;
             db.Books.Update(book);
-            db.SaveChanges();
+            db.DbContext.SaveChanges();
         }
 
         public EditBookViewModel Edit(int? id)
@@ -122,7 +125,7 @@ namespace Library.Services.BookContorlServices
             if (book.Evaluation.Users == null)
             {
                 book.Evaluation.Users = new List<string>();
-                db.SaveChanges();
+                db.DbContext.SaveChanges();
             }
             List<Comment> comment = book.Comments.ToList();
 

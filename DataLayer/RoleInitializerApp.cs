@@ -17,17 +17,17 @@ namespace Library
             string librarianEmail = "librarian@gmail.com";
             string librarianPassword = "Librarian_Librarian_1";
 
-            if (await roleManager.FindByNameAsync(RolesConfig.admin) == null)
+            if (await roleManager.FindByNameAsync(RolesConfig.ADMIN) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole(RolesConfig.admin));
+                await roleManager.CreateAsync(new IdentityRole(RolesConfig.ADMIN));
             }
-            if (await roleManager.FindByNameAsync(RolesConfig.librarian) == null)
+            if (await roleManager.FindByNameAsync(RolesConfig.LIBRARIAN) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole(RolesConfig.librarian));
+                await roleManager.CreateAsync(new IdentityRole(RolesConfig.LIBRARIAN));
             }
-            if (await roleManager.FindByNameAsync(RolesConfig.user) == null)
+            if (await roleManager.FindByNameAsync(RolesConfig.USER) == null)
             {
-                await roleManager.CreateAsync(new IdentityRole(RolesConfig.user));
+                await roleManager.CreateAsync(new IdentityRole(RolesConfig.USER));
             }
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
@@ -35,7 +35,7 @@ namespace Library
                 IdentityResult result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(admin, RolesConfig.admin);
+                    await userManager.AddToRoleAsync(admin, RolesConfig.ADMIN);
                 }
             }
             if (await userManager.FindByNameAsync(userEmail) == null)
@@ -44,7 +44,7 @@ namespace Library
                 IdentityResult result = await userManager.CreateAsync(user, userPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, RolesConfig.user);
+                    await userManager.AddToRoleAsync(user, RolesConfig.USER);
                 }
             }
             if (await userManager.FindByNameAsync(librarianEmail) == null)
@@ -53,7 +53,7 @@ namespace Library
                 IdentityResult result = await userManager.CreateAsync(librarian, librarianPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(librarian, RolesConfig.librarian);
+                    await userManager.AddToRoleAsync(librarian, RolesConfig.LIBRARIAN);
                 }
             }
         }
