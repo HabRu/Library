@@ -3,8 +3,6 @@ using BusinessLayer.InrefacesRepository;
 using Library.Models;
 using Library.Services.EmailServices;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,73 +10,72 @@ namespace Library.Services.ReservationControlServices
 {
     public class EFReservationsRepository : IReservationRepository
     {
-        private readonly IRepository db;
+        private readonly IRepository<Reservation> resRep;
+
+        private readonly IRepository<Book> bookRep;
+
+        private readonly IRepository<Tracking> trackRep;
 
         private readonly EmailService emailService;
 
         private readonly MessageForm message;
 
-        private readonly UserManager<User> _userManager;
-
-        public EFReservationsRepository(IRepository db, EmailService emailService,
-                                        MessageForm message, UserManager<User> _userManager)
+        public EFReservationsRepository(IRepository<Reservation> resRep, IRepository<Book> bookRep, IRepository<Tracking> trackRep, EmailService emailService,
+                                        MessageForm message)
         {
-            this.db = db;
+            this.resRep = resRep;
+            this.bookRep = bookRep;
+            this.trackRep = trackRep;
             this.emailService = emailService;
             this.message = message;
-            this._userManager = _userManager;
         }
 
         public async Task AcceptReserv(int? id)
         {
-            Reservation reservation = db.Reservations.FirstOrDefault(p => p.Id == id);
-            Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
+            var reservation = await resRep.GetByIdAsync(id);
+            var book = await bookRep.GetByIdAsync(reservation.BookIdentificator);
             book.Status = Status.Available;
+            await bookRep.UpdateAsync(book);
             reservation.State = ReserveState.Passed;
             reservation.DataSend = System.DateTime.Now;
-            await db.DbContext.SaveChangesAsync();
-
+            await resRep.UpdateAsync(reservation);
         }
 
-        public async Task CreateReserv(int? id, string userId)
+        public async Task<Reservation> CreateReserv(int? id, string userId, string userName)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == id);
-
-            User user = db.Users.FirstOrDefault(p => p.Id == userId);
-            Reservation reservation = new Reservation { BookIdentificator = book.Id, UserId = user.Id, UserName = user.UserName, User = user };
+            var book = await bookRep.GetByIdAsync(id);
+            var reservation = new Reservation { BookIdentificator = book.Id, UserId = userId, UserName = userName };
             reservation.State = ReserveState.Booked;
             reservation.DataBooking = System.DateTime.Now;
-            await db.Reservations.AddAsync(reservation);
+            await resRep.CreateAsync(reservation);
             book.Status = Status.Booked;
-            user.ReservUser.Add(reservation);
-            db.Books.Update(book);
-            await db.DbContext.SaveChangesAsync();
+            await bookRep.UpdateAsync(book);
+            return reservation;
         }
 
         public async Task DeleteReserv(int? id, string name, bool hasAccess)
         {
-            Reservation reservation = db.Reservations.Include(r => r.User).FirstOrDefault(p => p.Id == id);
-            User user = reservation.User;
-            Book book = db.Books.FirstOrDefault(p => p.Id == reservation.BookIdentificator);
+            var reservation = resRep.Include(r => r.User).FirstOrDefault(p => p.Id == id);
+            var user = reservation.User;
+            var book = await bookRep.GetByIdAsync(reservation.BookIdentificator);
             //Получакм список подписок
-            List<Tracking> trackings = db.Trackings.Include(t => t.User).Where(t => t.BookId == book.Id).ToList();
+            var trackings = trackRep.Include(t => t.User).Where(t => t.BookId == book.Id).ToList();
             //Отправка сообщения подписчикам, что книга доступна для бронирования
             foreach (var track in trackings)
             {
                 await emailService.SendEmailAsync(track.User.Email, "Книга доступна для бронирования", message.GetMessage(track.User.UserName, book.Title)); ;
             }
             //Удаляем подписчиков
-            db.Trackings.RemoveRange(trackings);
+            trackRep.DeleteRange(trackings);
             //Проверка того,что пользователь авторизован
             if (hasAccess || name == user.Email)
             {
                 //Удаление резирвации
                 book.Status = Status.Available;
-                db.Reservations.Remove(reservation);
+                resRep.Delete(reservation);
                 user.ReservUser.Remove(reservation);
                 //Сохранение изменений
-                await db.DbContext.SaveChangesAsync();
-
+                await bookRep.SaveChanges();
             }
         }
     }

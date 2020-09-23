@@ -11,7 +11,7 @@ namespace Library.Controllers
 {
     public class HomeController : Controller
     {
-        readonly ApplicationContext db;
+        private readonly ApplicationContext db;
 
         public HomeController(ApplicationContext applicationContext)
         {
@@ -21,14 +21,14 @@ namespace Library.Controllers
         //Контроллер начальной страницы
         public async Task<IActionResult> Index()
         {
-            IQueryable<Book> booksQuery = db.Books;
+            var booksQuery = db.Books;
             //Возвращает новые книги
-            IList<Book> newBooks = await booksQuery.OrderBy(b => b.Id).Take(3).ToListAsync();
+            var newBooks = await booksQuery.OrderBy(b => b.Id).Take(3).ToListAsync();
             //Возвращает популярные книги
-            IList<Book> topBooks = await booksQuery.OrderByDescending(p => p.Evaluation.Average)
+            var topBooks = await booksQuery.OrderByDescending(p => p.Evaluation.Average)
                 .Take(3)
                 .ToListAsync();
-            IndexViewModel indexViewModel = new IndexViewModel { NewBooks = (List<Book>)newBooks, TopBooks = (List<Book>)topBooks };
+            var indexViewModel = new IndexViewModel { NewBooks = newBooks, TopBooks = topBooks };
             return View(indexViewModel);
         }
 

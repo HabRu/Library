@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using DataLayer.Entities;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    public class Book
+    public class Book : IEntity<int>
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

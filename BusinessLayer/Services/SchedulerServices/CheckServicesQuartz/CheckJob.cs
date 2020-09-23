@@ -34,15 +34,13 @@ namespace Library.Services.CheckServicesQuartz
 
         public async Task CheckReservs()
         {
-            using (var scope = serviceScopeFactory.CreateScope())
+            using var scope = serviceScopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            if (db.Reservations.Count() > 0)
             {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                if (db.Reservations.Count() > 0)
+                foreach (Reservation reservation in db.Reservations)
                 {
-                    foreach (Reservation reservation in db.Reservations)
-                    {
-                        await CheckDateAsync(reservation);
-                    }
+                    await CheckDateAsync(reservation);
                 }
             }
         }
@@ -50,31 +48,27 @@ namespace Library.Services.CheckServicesQuartz
         //Метод для проверки не истек ли срок бронирования
         public async Task CheckDateAsync(Reservation reservation)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
+            using var scope = serviceScopeFactory.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            if (reservation.State != ReserveState.Passed)
             {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                if (reservation.State != ReserveState.Passed)
+                //Если прошло больше settings.TimeReservation  дней тода удаляем бронирование и отправляем уведомления, тем кто отслеживает эту книгу
+                if (DateTime.Now.Subtract(reservation.DataBooking).Days > settings.TimeReservation)
                 {
-                    //Если прошло больше settings.TimeReservation  дней тода удаляем бронирование и отправляем уведомления, тем кто отслеживает эту книгу
-                    if (DateTime.Now.Subtract(reservation.DataBooking).Days > settings.TimeReservation)
+                    List<Tracking> trackings = db.Trackings.Include(t => t.User).Include(t => t.Book).Where(t => t.BookId == reservation.BookIdentificator).ToList();
+                    if (trackings.Count > 0)
                     {
-                        List<Tracking> trackings = db.Trackings.Include(t => t.User).Include(t => t.Book).Where(t => t.BookId == reservation.BookIdentificator).ToList();
-                        if (trackings.Count > 0)
+                        foreach (var trac in trackings)
                         {
-                            foreach (var trac in trackings)
-                            {
-                                trac.Book.Status = Status.Available;
-                                await emailService.SendEmailAsync(trac.User.Email, "Книга доступна для бронирования", message.GetMessage(trac.User.UserName, trac.Book.Title));
-                            }
-
+                            trac.Book.Status = Status.Available;
+                            await emailService.SendEmailAsync(trac.User.Email, "Книга доступна для бронирования", message.GetMessage(trac.User.UserName, trac.Book.Title));
                         }
-                        db.Reservations.Remove(reservation);
-                        db.Trackings.RemoveRange(trackings);
-                        db.SaveChanges();
+
                     }
+                    db.Reservations.Remove(reservation);
+                    db.Trackings.RemoveRange(trackings);
+                    db.SaveChanges();
                 }
-
-
             }
         }
     }

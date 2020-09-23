@@ -52,9 +52,9 @@ namespace Library.Controllers
         //ДОСТУПНА ТОЛЬКО ДЛЯ РОЛИ "librarian"
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         [HttpGet]
-        public async Task<IActionResult> DeleteBook(int? id)
+        public  IActionResult DeleteBook(int? id)
         {
-            await bookControl.DeleteBook(id);
+            bookControl.DeleteBook(id);
             return RedirectToAction("ListBook");
         }
 
@@ -63,7 +63,7 @@ namespace Library.Controllers
         [Authorize]
         public IActionResult ListBook(BookFilterModel model)
         {
-            AllListBookViewModel modelBooks = bookControl.ListBook(model);
+            var modelBooks = bookControl.ListBook(model);
             if (User.Identity.IsAuthenticated) {
                 modelBooks.Trackings = trackings.GetTrackingsByUserId(userManager.GetUserId(User)).ToList();
                 ViewBag.userId = userManager.GetUserId(User);
@@ -86,7 +86,7 @@ namespace Library.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(CommentViewModel comment, string UserName)
         {
-            await bookControl.AddComment(comment, User.Identity.Name);
+            await bookControl.AddComment(comment, UserName);
             return RedirectToAction("GetThisBook", new { id = comment.BookId });
         }
 

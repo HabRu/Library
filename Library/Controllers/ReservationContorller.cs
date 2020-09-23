@@ -42,7 +42,7 @@ namespace Library.Controllers
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> ListReserv()
         {
-            IQueryable<Reservation> reservations = db.Reservations;
+            var reservations = db.Reservations;
             return View(await reservations.AsNoTracking().ToListAsync());
 
         }
@@ -51,7 +51,9 @@ namespace Library.Controllers
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> Accept(int? id)
         {
-            await reservationControl.CreateReserv(id, userManager.GetUserId(User));
+            var user = await userManager.GetUserAsync(User);
+            user.ReservUser.Add(await reservationControl.CreateReserv(id, user.Id, user.NameUser));
+            db.SaveChanges();
             return RedirectToAction("ListReserv");
         }
 
@@ -59,7 +61,9 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> CreateReserv(int? id)
         {
-            await reservationControl.CreateReserv(id, userManager.GetUserId(User));
+            var user = await userManager.GetUserAsync(User);
+            user.ReservUser.Add(await reservationControl.CreateReserv(id, user.Id, user.NameUser));
+            db.SaveChanges();
             return RedirectToAction("ListBook", "Book");
         }
     }

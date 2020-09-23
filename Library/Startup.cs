@@ -66,7 +66,11 @@ namespace Library
             });
 
             services.AddTransient<DbContext, ApplicationContext>();
-            services.AddTransient<IRepository, Repository>();
+            services.AddTransient<IRepository<Book>, Repository<Book>>();
+            services.AddTransient<IRepository<Tracking>, Repository<Tracking>>();
+            services.AddTransient<IRepository<Reservation>, Repository<Reservation>>();
+            services.AddTransient<IRepository<Comment>, Repository<Comment>>();
+            services.AddTransient<IRepository<Evaluation>, Repository<Evaluation>>();
             services.AddTransient<IBooksRepository, EFBooksRepository>();
             services.AddTransient<IReservationRepository, EFReservationsRepository>();
             services.AddTransient<ITrackingsRepository, EFTrackingsRepository>();

@@ -15,11 +15,9 @@ namespace Library.Services.CheckServicesQuartz
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                var job = scope.ServiceProvider.GetService(bundle.JobDetail.JobType) as IJob;
-                return job;
-            }
+            using var scope = serviceScopeFactory.CreateScope();
+            var job = scope.ServiceProvider.GetService(bundle.JobDetail.JobType) as IJob;
+            return job;
         }
 
         public void ReturnJob(IJob job)

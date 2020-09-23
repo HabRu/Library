@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Reflection;
 
 namespace Library.Models
 {
@@ -35,11 +36,8 @@ namespace Library.Models
         {
             try
             {
-                modelBuilder.ApplyConfiguration(new BookConfigure())
-                            .ApplyConfiguration(new CommentConfigure())
-                            .ApplyConfiguration(new EvaluationConfigure())
-                            .ApplyConfiguration(new ReservationConfigure())
-                            .ApplyConfiguration(new TrackingConfigure());
+                var assembly = Assembly.GetExecutingAssembly();
+                modelBuilder.ApplyConfigurationsFromAssembly(assembly);
 
                 modelBuilder.Entity<Book>()
                     .Property(b => b.Id)

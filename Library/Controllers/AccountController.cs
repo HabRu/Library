@@ -12,7 +12,7 @@ namespace Library.Controllers
 {
     public class AccountController : Controller
     {
-        private SignInManager<User> _signInManager;
+        private readonly SignInManager<User> _signInManager;
 
         private readonly UserManager<User> _userManager;
 
@@ -109,7 +109,7 @@ namespace Library.Controllers
             {
                 //Если валидно то
                 //Создаем переменную для пользователя
-                User user = mapper.Map<User>(model);
+                var user = mapper.Map<User>(model);
                 //Добавляем в бд и хешируем пароль, и получаем result,который хранить состояние операции
                 var result = await _userManager.CreateAsync(user, model.Password);
                 //#IF2:Если состояние операции Succeeded
@@ -121,10 +121,10 @@ namespace Library.Controllers
                     var callbackUrl = Url.Action(
                         "ConfirmEmail",
                         "Account",
-                        new { userId = user.Id, code = code },
+                        new { userId = user.Id, code },
                         protocol: HttpContext.Request.Scheme);
                     //То пользователю добавляем роль user по умолчанию,результат операции возвращается 
-                    result = await _userManager.AddToRoleAsync(user, "user");
+                    await _userManager.AddToRoleAsync(user, "user");
                     //Отправляем письмо для подтверждения
                     await emailService.SendEmailAsync(model.Email, "Подтвердите свой аккаунт",
                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");

@@ -1,9 +1,5 @@
-﻿using Library.Models;
-using Library.Services.CheckServicesQuartz;
-using Library.Services.EmailServices;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Library.Services.CheckServicesQuartz;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Quartz;
 using Quartz.Spi;
 using System.Collections.Generic;
@@ -21,9 +17,6 @@ namespace Library.Services.CheckServices
 
         public StartEmailService(
             ISchedulerFactory schedulerFactory,
-            EmailService emailService,
-            IServiceScopeFactory serviceScopeFactory,
-            IOptions<Settings> settings,
             IJobFactory jobFactory,
             IEnumerable<EmailScheduler> emailSchedulers)
         {

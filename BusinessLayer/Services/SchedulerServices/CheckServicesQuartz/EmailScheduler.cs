@@ -5,6 +5,7 @@ namespace Library.Services.CheckServicesQuartz
     public class EmailScheduler
     {
         public Type JobType { get; }
+
         public string CronExpression { get; }
 
         public EmailScheduler(Type jobType, string cronExpression)
@@ -12,8 +13,5 @@ namespace Library.Services.CheckServicesQuartz
             JobType = jobType;
             CronExpression = cronExpression;
         }
-
-        
-
     }
 }

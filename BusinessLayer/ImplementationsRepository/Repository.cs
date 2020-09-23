@@ -1,44 +1,76 @@
 ﻿using BusinessLayer.InrefacesRepository;
+using DataLayer.Entities;
 using Library.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.ImplementationsRepository
 {
-    public class Repository : IRepository
+    public class Repository<TElement> : IRepository<TElement> where TElement : class, IEntity<int>
     {
-        private readonly DbContext dbContext;
+        private readonly DbContext db;
+        private readonly DbSet<TElement> _dbSet;
 
-        public DbSet<Book> Books { get; set; }
-
-        public DbSet<Reservation> Reservations { get; set; }
-
-        public DbSet<FileModel> Files { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<Evaluation> Evaluations { get; set; }
-
-        public DbSet<Tracking> Trackings { get; set; }
-
-        public DbSet<User> Users { get; set; }
-
-        public DbContext DbContext {
-            get
-            { 
-                return dbContext;
-            } 
+        public Repository(DbContext db)
+        {
+            this.db = db;
+            _dbSet = db.Set<TElement>();
         }
 
-        public Repository(DbContext dbContext)
+        public async Task CreateAsync(TElement entity)
         {
-            this.dbContext = dbContext;
-            Books = dbContext.Set<Book>();
-            Reservations = dbContext.Set<Reservation>();
-            Files = dbContext.Set<FileModel>();
-            Comments = dbContext.Set<Comment>();
-            Evaluations = dbContext.Set<Evaluation>();
-            Trackings = dbContext.Set<Tracking>();
-            Users = dbContext.Set<User>();
+            await _dbSet.AddAsync(entity);
+            await db.SaveChangesAsync();
+        }
+
+        public async void Delete(int? id)
+        {
+            _dbSet.Remove(await GetByIdAsync(id));
+            await db.SaveChangesAsync();
+        }
+
+        public async void Delete(TElement entity)
+        {
+            _dbSet.Remove(entity);
+            await db.SaveChangesAsync();
+        }
+
+        public async void DeleteRange(IEnumerable<TElement> entities)
+        {
+            _dbSet.RemoveRange(entities);
+            await db.SaveChangesAsync();
+        }
+
+        public IQueryable<TElement> GetAll()
+        {
+            return _dbSet.AsQueryable();
+        }
+        
+        public async Task<TElement> GetByIdAsync(int? id)
+        {
+            return await _dbSet.FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task UpdateAsync(TElement entity)
+        {
+            db.Entry(entity).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+        }
+
+        public IQueryable<TElement> Include(params Expression<Func<TElement, object>>[] includeProperties)
+        {
+            IQueryable<TElement> query = _dbSet.AsNoTracking();
+            return includeProperties
+                .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+        }
+        
+        public async Task SaveChanges()
+        {
+           await db.SaveChangesAsync();
         }
     }
 }

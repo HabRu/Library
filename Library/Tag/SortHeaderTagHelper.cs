@@ -16,7 +16,7 @@ namespace Library.Tag
 
         public bool Up { get; set; }
 
-        private IUrlHelperFactory urlHelperFactory;
+        private readonly IUrlHelperFactory urlHelperFactory;
 
         public SortHeaderTagHelper(IUrlHelperFactory helperFactory)
         {
@@ -29,9 +29,9 @@ namespace Library.Tag
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            var urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
             output.TagName = "a";
-            string url = urlHelper.Action(Action, new { sortOrder = Property });
+            var url = urlHelper.Action(Action, new { sortOrder = Property });
             output.Attributes.SetAttribute("href", url);
             // если текущее свойство имеет значение CurrentSort
             if (Current == Property)

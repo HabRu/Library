@@ -1,27 +1,23 @@
-﻿using Library.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using DataLayer.Entities;
+using Library.Models;
 
 namespace BusinessLayer.InrefacesRepository
 {
-    public interface IRepository
+    public interface IRepository<TElement> where TElement : IEntity<int>
     {
-        public DbContext DbContext { get; }
-
-        public DbSet<Book> Books { get; set; }
-
-        public DbSet<Reservation> Reservations { get; set; }
-
-        public DbSet<FileModel> Files { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<Evaluation> Evaluations { get; set; }
-
-        public DbSet<Tracking> Trackings { get; set; }
-
-        public DbSet<User> Users { get; set; }
+        IQueryable<TElement> GetAll();
+        Task<TElement> GetByIdAsync(int? id);
+        Task CreateAsync(TElement entity);
+        Task UpdateAsync(TElement entity);
+        void Delete(int? id);
+        void Delete(TElement entity);
+        void DeleteRange(IEnumerable<TElement> entities);
+        IQueryable<TElement> Include(params Expression<Func<TElement, object>>[] includeProperties);
+        Task SaveChanges();
     }
 }

@@ -1,6 +1,8 @@
-﻿namespace Library.Models
+﻿using DataLayer.Entities;
+
+namespace Library.Models
 {
-    public class Comment
+    public class Comment : IEntity<int>
     {
         public int Id { get; set; }
 

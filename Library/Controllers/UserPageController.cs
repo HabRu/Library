@@ -12,8 +12,9 @@ namespace Library.Controllers
     [Authorize]
     public class UserPageController : Controller
     {
-        readonly UserManager<User> _userManager;
-        ApplicationContext db;
+        private readonly UserManager<User> _userManager;
+
+        private readonly ApplicationContext db;
         public UserPageController(ApplicationContext applicationContext, UserManager<User> user)
         {
             db = applicationContext;
@@ -22,7 +23,7 @@ namespace Library.Controllers
 
         public IActionResult MyPage()
         {
-            User user = db.Users.Include(u => u.ReservUser).FirstOrDefault(p => p.Id == _userManager.GetUserId(User));
+            var user = db.Users.Include(u => u.ReservUser).FirstOrDefault(p => p.Id == _userManager.GetUserId(User));
             return View(user);
         }
     }

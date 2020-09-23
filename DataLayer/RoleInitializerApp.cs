@@ -8,14 +8,14 @@ namespace Library
     {
         public static async Task InitializeAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            string adminEmail = "admin@gmail.com";
-            string password = "Admin_Admin_1";
+            var adminEmail = "admin@gmail.com";
+            var password = "Admin_Admin_1";
 
-            string userEmail = "user@gmail.com";
-            string userPassword = "User_User_1";
+            var userEmail = "user@gmail.com";
+            var userPassword = "User_User_1";
 
-            string librarianEmail = "librarian@gmail.com";
-            string librarianPassword = "Librarian_Librarian_1";
+            var librarianEmail = "librarian@gmail.com";
+            var librarianPassword = "Librarian_Librarian_1";
 
             if (await roleManager.FindByNameAsync(RolesConfig.ADMIN) == null)
             {
@@ -31,8 +31,8 @@ namespace Library
             }
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
-                User admin = new User { Email = adminEmail, UserName = adminEmail, EmailConfirmed = true };
-                IdentityResult result = await userManager.CreateAsync(admin, password);
+                var admin = new User { Email = adminEmail, UserName = adminEmail, EmailConfirmed = true };
+                var result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, RolesConfig.ADMIN);
@@ -40,8 +40,8 @@ namespace Library
             }
             if (await userManager.FindByNameAsync(userEmail) == null)
             {
-                User user = new User { Email = userEmail, UserName = userEmail, EmailConfirmed = true };
-                IdentityResult result = await userManager.CreateAsync(user, userPassword);
+                var user = new User { Email = userEmail, UserName = userEmail, EmailConfirmed = true };
+                var result = await userManager.CreateAsync(user, userPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, RolesConfig.USER);
@@ -49,8 +49,8 @@ namespace Library
             }
             if (await userManager.FindByNameAsync(librarianEmail) == null)
             {
-                User librarian = new User { Email = librarianEmail, UserName = librarianEmail, EmailConfirmed = true };
-                IdentityResult result = await userManager.CreateAsync(librarian, librarianPassword);
+                var librarian = new User { Email = librarianEmail, UserName = librarianEmail, EmailConfirmed = true };
+                var result = await userManager.CreateAsync(librarian, librarianPassword);
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(librarian, RolesConfig.LIBRARIAN);

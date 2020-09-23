@@ -1,8 +1,9 @@
-﻿using System;
+﻿using DataLayer.Entities;
+using System;
 
 namespace Library.Models
 {
-    public class Reservation
+    public class Reservation : IEntity<int>
     {
         public int Id { get; set; }
 

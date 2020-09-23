@@ -6,14 +6,14 @@ namespace Library.Models.Results
 {
     public class HtmlResult : IActionResult
     {
-        string htmlCode;
+        private readonly string htmlCode;
         public HtmlResult(string html)
         {
             htmlCode = html;
         }
         public async Task ExecuteResultAsync(ActionContext context)
         {
-            string fullHtmlCode = "<!DOCTYPE html><html><head>";
+            var fullHtmlCode = "<!DOCTYPE html><html><head>";
             fullHtmlCode += "<title>Подтвердите свой Email</title>";
             fullHtmlCode += "<meta charset=utf-8 />";
             fullHtmlCode += "</head> <body>";

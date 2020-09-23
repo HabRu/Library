@@ -10,7 +10,7 @@ namespace Library.Tag
 {
     public class PageLinkTagHelper : TagHelper
     {
-        private IUrlHelperFactory urlHelperFactory;
+        private readonly IUrlHelperFactory urlHelperFactory;
 
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
         {
@@ -30,20 +30,20 @@ namespace Library.Tag
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            var urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
             output.TagName = "div";
 
             // набор ссылок будет представлять список ul
-            TagBuilder tag = new TagBuilder("ul");
+            var tag = new TagBuilder("ul");
             tag.AddCssClass("pagination");
 
             // формируем три ссылки - на текущую, предыдущую и следующую
-            TagBuilder currentItem = CreateTag(PageModel.PageNumber, urlHelper);
+            var currentItem = CreateTag(PageModel.PageNumber, urlHelper);
 
             // создаем ссылку на предыдущую страницу, если она есть
             if (PageModel.HasPreviousPage)
             {
-                TagBuilder prevItem = CreateTag(PageModel.PageNumber - 1, urlHelper);
+                var prevItem = CreateTag(PageModel.PageNumber - 1, urlHelper);
                 tag.InnerHtml.AppendHtml(prevItem);
             }
 
@@ -51,7 +51,7 @@ namespace Library.Tag
             // создаем ссылку на следующую страницу, если она есть
             if (PageModel.HasNextPage)
             {
-                TagBuilder nextItem = CreateTag(PageModel.PageNumber + 1, urlHelper);
+                var nextItem = CreateTag(PageModel.PageNumber + 1, urlHelper);
                 tag.InnerHtml.AppendHtml(nextItem);
             }
             output.Content.AppendHtml(tag);
@@ -59,8 +59,8 @@ namespace Library.Tag
 
         TagBuilder CreateTag(int pageNumber, IUrlHelper urlHelper)
         {
-            TagBuilder item = new TagBuilder("li");
-            TagBuilder link = new TagBuilder("a");
+            var item = new TagBuilder("li");
+            var link = new TagBuilder("a");
 
             if (pageNumber == this.PageModel.PageNumber)
             {

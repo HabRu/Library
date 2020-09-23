@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Library.Models;
+using System.Threading.Tasks;
 
 namespace Library.Services.ReservationControlServices
 {
@@ -6,6 +7,6 @@ namespace Library.Services.ReservationControlServices
     {
         Task DeleteReserv(int? id, string email, bool hasAccess);
         Task AcceptReserv(int? id);
-        Task CreateReserv(int? id, string userId);
+        Task<Reservation> CreateReserv(int? id, string userId, string userName);
     }
 }

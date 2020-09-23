@@ -7,33 +7,32 @@ namespace BusinessLayer.ImplementationsRepository
 {
     public class EFTrackingsRepository : ITrackingsRepository
     {
-        private readonly IRepository db;
+        private readonly IRepository<Tracking> trackRep;
 
-        public EFTrackingsRepository(IRepository db)
+        public EFTrackingsRepository(IRepository<Tracking> trackRep)
         {
-            this.db = db;
+            this.trackRep = trackRep;
         }
+
         public async void Add(int bookId, string userId)
         {
-            Tracking tracking = new Tracking
+            var tracking = new Tracking
             {
                 BookId = bookId,
                 UserId = userId
             };
-            await db.Trackings.AddAsync(tracking);
-            db.DbContext.SaveChanges();
+            await trackRep.CreateAsync(tracking);
         }
 
         public  void Delete(int bookId, string userId)
         {
-            Tracking tracking = db.Trackings.FirstOrDefault((t) => t.BookId == bookId && t.UserId == userId);
-            db.Trackings.Remove(tracking);
-            db.DbContext.SaveChanges();
+            var tracking = trackRep.GetAll().FirstOrDefault((t) => t.BookId == bookId && t.UserId == userId);
+            trackRep.Delete(tracking);
         }
 
         public IEnumerable<Tracking> GetTrackingsByUserId(string userId)
         {
-            return db.Trackings.Where(t => t.UserId == userId);
+            return trackRep.GetAll().Where(t => t.UserId == userId);
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using DataLayer.Entities;
+using System.Collections.Generic;
 
 namespace Library.Models
 {
-    public class Evaluation
+    public class Evaluation : IEntity<int>
     {
         public int Id { get; set; }
 

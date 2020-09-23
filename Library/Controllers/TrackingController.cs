@@ -11,7 +11,8 @@ namespace Library.Controllers
     [Authorize]
     public class TrackingController : Controller
     {
-        UserManager<User> userManager;
+        private readonly UserManager<User> userManager;
+
         private readonly ITrackingsRepository trackingsRepostiroy;
 
         public TrackingController(UserManager<User> _userManager, ITrackingsRepository trackingsRepostiroy)

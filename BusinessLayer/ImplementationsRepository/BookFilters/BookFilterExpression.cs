@@ -10,7 +10,7 @@ namespace Library.Services.BookContorlServices.BookFilters
     {
         public static IQueryable<TElement> WhereComplex<TElement, TKey>(this IQueryable<TElement> set, TKey element)
         {
-            PropertyInfo[] props = element.GetType().GetProperties();
+            var props = element.GetType().GetProperties();
 
             foreach (var prop in props)
             {
@@ -20,7 +20,7 @@ namespace Library.Services.BookContorlServices.BookFilters
                     var setParametrExpression = Expression.Parameter(typeof(TElement), "prop");
                     var setProperty = Expression.Property(setParametrExpression, prop.Name);
                     var modelConstant = Expression.Constant(propValue, typeof(string));
-                    MethodInfo method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                    var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
                     var callMethod = Expression.Call(setProperty, method, modelConstant);
                     var lambda = Expression.Lambda<Func<TElement, bool>>(callMethod, setParametrExpression);
                     set = set.Where(lambda);

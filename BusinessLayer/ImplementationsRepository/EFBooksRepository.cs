@@ -14,15 +14,21 @@ namespace Library.Services.BookContorlServices
 {
     public class EFBooksRepository : IBooksRepository
     {
-        private readonly IRepository db;
+        private readonly IRepository<Book> bookRep;
+
+        private readonly IRepository<Comment> commRep;
+
+        private readonly IRepository<Evaluation> evalRep;
 
         private readonly IMapper mapper;
 
         private readonly IConfiguration configuration;
 
-        public EFBooksRepository(IRepository db, IMapper mapper, IConfiguration configuration)
+        public EFBooksRepository(IRepository<Book> bookRep, IRepository<Comment> commRep, IRepository<Evaluation> evalRep, IMapper mapper, IConfiguration configuration)
         {
-            this.db = db;
+            this.bookRep = bookRep;
+            this.commRep = commRep;
+            this.evalRep = evalRep;
             this.mapper = mapper;
             this.configuration = configuration;
         }
@@ -30,12 +36,11 @@ namespace Library.Services.BookContorlServices
         public async Task AddBook(AddBookViewModel model, string pathWeb)
         {
             //Создаем переменную книги
-            Book book = mapper.Map<Book>(model);
+            var book = mapper.Map<Book>(model);
 
             //Если изображение не null,
             if (model.Image != null)
             {
-
                 var path = configuration.GetValue<string>("ImagePath") + model.Image.FileName;
                 var contentPath = pathWeb + path;
 
@@ -49,28 +54,25 @@ namespace Library.Services.BookContorlServices
             }
 
             //Добавляем книгу в бд
-            db.Books.Add(book);
-            //Сохраняем изменения
-            await db.DbContext.SaveChangesAsync();
+            await bookRep.CreateAsync(book);
         }
 
         public async Task AddComment(CommentViewModel comment, string NameUser)
         {
-            Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == comment.BookId);
-            Comment Comment = mapper.Map<Comment>(comment);
+            var book = await bookRep.GetByIdAsync(comment.BookId);
+            var Comment = mapper.Map<Comment>(comment);
             Comment.Book = book;
             Comment.NameUser = NameUser;
-            db.Comments.Add(Comment);
+            await commRep.CreateAsync(Comment);
             book.Comments.Add(Comment);
-            db.Books.Update(book);
-            await db.DbContext.SaveChangesAsync();
+            await bookRep.UpdateAsync(book);
         }
 
 
         public async Task AddEvaluation(EvaluationViewModel evaluation)
         {
-            Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == evaluation.BookId);
-            Evaluation Evaluation = await db.Evaluations.FirstOrDefaultAsync(p => p.BookId == evaluation.BookId);
+            var book = await bookRep.GetByIdAsync(evaluation.BookId);
+            var Evaluation = await evalRep.GetByIdAsync(evaluation.BookId);
             if (Evaluation.Average == 0)
             {
                 Evaluation.Average = evaluation.Score;
@@ -82,25 +84,18 @@ namespace Library.Services.BookContorlServices
             Evaluation.Users.Add(evaluation.user);
             Evaluation.Book = book;
             book.Evaluation = Evaluation;
-            db.Evaluations.Update(Evaluation);
-            db.Books.Update(book);
-            await db.DbContext.SaveChangesAsync();
-
+            await evalRep.UpdateAsync(Evaluation);
+            await bookRep.UpdateAsync(book);
         }
 
-        public async Task DeleteBook(int? id)
+        public void DeleteBook(int? id)
         {
-            Book book = await db.Books.FirstOrDefaultAsync(p => p.Id == id);
-            if (book != null)
-            {
-                db.Books.Remove(book);
-                await db.DbContext.SaveChangesAsync();
-            }
+            bookRep.Delete(id);
         }
 
-        public void Edit(EditBookViewModel edit)
+        public async void Edit(EditBookViewModel edit)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == edit.Id);
+            var book = await bookRep.GetByIdAsync(edit.Id);
             book.Title = edit.Title;
             book.Authtor = edit.Authtor;
             book.Year = edit.Year;
@@ -108,26 +103,24 @@ namespace Library.Services.BookContorlServices
             book.Genre = edit.Genre;
             book.Publisher = edit.Publisher;
             book.Description = edit.Description;
-            db.Books.Update(book);
-            db.DbContext.SaveChanges();
+            await bookRep.UpdateAsync(book);
         }
 
-        public EditBookViewModel Edit(int? id)
+        public async Task<EditBookViewModel> Edit(int? id)
         {
-            Book book = db.Books.FirstOrDefault(p => p.Id == id);
-            EditBookViewModel editBookViewModel = mapper.Map<EditBookViewModel>(book);
+            var book = await bookRep.GetByIdAsync(id);
+            var editBookViewModel = mapper.Map<EditBookViewModel>(book);
             return editBookViewModel;
         }
 
         public async Task<BookViewModel> GetThisBook(int? id)
         {
-            Book book = await db.Books.Include(b => b.Comments).Include(b => b.Evaluation).Include(b => b.Evaluation).FirstOrDefaultAsync(p => p.Id == id);
+            var book = await bookRep.Include(b => b.Comments, b => b.Evaluation).FirstOrDefaultAsync(b => b.Id == id);
             if (book.Evaluation.Users == null)
             {
                 book.Evaluation.Users = new List<string>();
-                db.DbContext.SaveChanges();
             }
-            List<Comment> comment = book.Comments.ToList();
+            var comment = book.Comments.ToList();
 
             if (comment != null)
             {
@@ -140,7 +133,7 @@ namespace Library.Services.BookContorlServices
 
         public AllListBookViewModel ListBook(BookFilterModel model)
         {
-            IQueryable<BookViewModel> Books = mapper.ProjectTo<BookViewModel>(db.Books);
+            var Books = mapper.ProjectTo<BookViewModel>(bookRep.GetAll());
             //Фильтрация книг
             Books = Books.WhereComplex(model);
             //Сортировка книг
@@ -150,7 +143,7 @@ namespace Library.Services.BookContorlServices
             var items = Books.Skip((model.Page - 1) * model.PageSize).Take(model.PageSize).ToList();
 
             // формируем модель представления
-            AllListBookViewModel viewModel = new AllListBookViewModel
+            var viewModel = new AllListBookViewModel
             {
                 PageViewModel = new PageViewModel(count, model.Page, model.PageSize),
                 SortViewModel = new SortViewModel(model.SortOrder),

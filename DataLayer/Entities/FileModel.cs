@@ -1,6 +1,8 @@
-﻿namespace Library.Models
+﻿using DataLayer.Entities;
+
+namespace Library.Models
 {
-    public class FileModel
+    public class FileModel : IEntity<int>
     {
         public int Id { get; set; }
 

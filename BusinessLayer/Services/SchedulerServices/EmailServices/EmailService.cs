@@ -20,15 +20,19 @@ namespace Library.Services.EmailServices
         {
             try
             {
-                MailAddress from = new MailAddress("aa.d.m.i.n@yandex.ru", "Администрация");
-                MailAddress to = new MailAddress(email);
-                MailMessage m = new MailMessage(from, to);
-                m.Subject = subject;
-                m.Body = message;
-                m.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 25);
-                smtp.Credentials = new NetworkCredential("aa.d.m.i.n@yandex.ru", "Admin_Admin_1");
-                smtp.EnableSsl = true;
+                var from = new MailAddress("aa.d.m.i.n@yandex.ru", "Администрация");
+                var to = new MailAddress(email);
+                var m = new MailMessage(from, to)
+                {
+                    Subject = subject,
+                    Body = message,
+                    IsBodyHtml = true
+                };
+                var smtp = new SmtpClient("smtp.yandex.ru", 25)
+                {
+                    Credentials = new NetworkCredential("aa.d.m.i.n@yandex.ru", "Admin_Admin_1"),
+                    EnableSsl = true
+                };
                 logger.LogDebug(email);
                 await smtp.SendMailAsync(m);
             }
