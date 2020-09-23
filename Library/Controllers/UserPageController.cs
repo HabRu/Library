@@ -15,6 +15,7 @@ namespace Library.Controllers
         private readonly UserManager<User> _userManager;
 
         private readonly ApplicationContext db;
+
         public UserPageController(ApplicationContext applicationContext, UserManager<User> user)
         {
             db = applicationContext;
