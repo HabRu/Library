@@ -7,11 +7,10 @@ namespace Library.Models.Configuration
     {
         public void Configure(EntityTypeBuilder<Book> builder)
         {
-            builder.HasKey(b => b.Id);
+            builder.ToTable("Books").HasKey(b => b.Id);
+            builder.Property(b => b.Id).IsRequired();
             builder.Property(b => b.Title).IsRequired().HasMaxLength(50);
             builder.Property(b => b.Authtor).IsRequired().HasMaxLength(50);
-
-            builder.ToTable("Books");
         }
     }
 }

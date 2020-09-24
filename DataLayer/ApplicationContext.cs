@@ -9,7 +9,6 @@ namespace Library.Models
 {
     public class ApplicationContext : IdentityDbContext<User>
     {
-
         private readonly ILogger<ApplicationContext> logger;
 
         public DbSet<Book> Books { get; set; }

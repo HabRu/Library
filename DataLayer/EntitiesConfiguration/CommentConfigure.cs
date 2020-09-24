@@ -7,11 +7,9 @@ namespace Library.Models.Configuration
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            builder.HasKey(b => b.Id);
-
             builder.HasOne(b => b.Book).WithMany(b => b.Comments).HasForeignKey(c => c.BookId);
 
-            builder.ToTable("Comments");
+            builder.ToTable("Comments").HasKey(b => b.Id); ;
         }
     }
 }
