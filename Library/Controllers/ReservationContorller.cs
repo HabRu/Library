@@ -6,20 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Library.Services.ReservationControlServices;
+using BusinessLayer.InrefacesRepository;
 
 namespace Library.Controllers
 {
     public class ReservationController : Controller
     {
-        private readonly ApplicationContext db;
+        private readonly IRepository<Reservation> reservRep;
 
         private readonly IReservationRepository reservationControl;
 
         private readonly UserManager<User> userManager;
 
-        public ReservationController(ApplicationContext applicationContext, IReservationRepository reservationControl, UserManager<User> userManager)
+        public ReservationController(IRepository<Reservation> reservRep, IReservationRepository reservationControl, UserManager<User> userManager)
         {
-            db = applicationContext;
+            this.reservRep = reservRep;
             this.reservationControl = reservationControl;
             this.userManager = userManager;
         }
@@ -42,7 +43,7 @@ namespace Library.Controllers
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> ListReserv()
         {
-            var reservations = db.Reservations;
+            var reservations = reservRep.GetAll();
             return View(await reservations.AsNoTracking().ToListAsync());
 
         }
@@ -53,7 +54,7 @@ namespace Library.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             user.ReservUser.Add(await reservationControl.CreateReserv(id, user.Id, user.NameUser));
-            db.SaveChanges();
+             await reservRep.SaveChanges();
             return RedirectToAction("ListReserv");
         }
 
@@ -63,7 +64,7 @@ namespace Library.Controllers
         {
             var user = await userManager.GetUserAsync(User);
             user.ReservUser.Add(await reservationControl.CreateReserv(id, user.Id, user.NameUser));
-            db.SaveChanges();
+            await reservRep.SaveChanges();
             return RedirectToAction("ListBook", "Book");
         }
     }

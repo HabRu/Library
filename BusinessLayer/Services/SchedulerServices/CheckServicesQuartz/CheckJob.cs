@@ -36,9 +36,9 @@ namespace Library.Services.CheckServicesQuartz
         {
             using var scope = serviceScopeFactory.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-            if (db.Reservations.Count() > 0)
+            if (db.Set<Reservation>().Count() > 0)
             {
-                foreach (Reservation reservation in db.Reservations)
+                foreach (Reservation reservation in db.Set<Reservation>())
                 {
                     await CheckDateAsync(reservation);
                 }
@@ -55,7 +55,7 @@ namespace Library.Services.CheckServicesQuartz
                 //Если прошло больше settings.TimeReservation  дней тода удаляем бронирование и отправляем уведомления, тем кто отслеживает эту книгу
                 if (DateTime.Now.Subtract(reservation.DataBooking).Days > settings.TimeReservation)
                 {
-                    List<Tracking> trackings = db.Trackings.Include(t => t.User).Include(t => t.Book).Where(t => t.BookId == reservation.BookIdentificator).ToList();
+                    List<Tracking> trackings = db.Set<Tracking>().Include(t => t.User).Include(t => t.Book).Where(t => t.BookId == reservation.BookIdentificator).ToList();
                     if (trackings.Count > 0)
                     {
                         foreach (var trac in trackings)
@@ -65,8 +65,8 @@ namespace Library.Services.CheckServicesQuartz
                         }
 
                     }
-                    db.Reservations.Remove(reservation);
-                    db.Trackings.RemoveRange(trackings);
+                    db.Set<Reservation>().Remove(reservation);
+                    db.Set<Tracking>().RemoveRange(trackings);
                     db.SaveChanges();
                 }
             }

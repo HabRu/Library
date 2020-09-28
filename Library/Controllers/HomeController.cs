@@ -6,22 +6,23 @@ using Library.Models;
 using Library.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using BusinessLayer.InrefacesRepository;
 
 namespace Library.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationContext db;
+        private readonly IRepository<Book> bookRep;
 
-        public HomeController(ApplicationContext applicationContext)
+        public HomeController(IRepository<Book> bookRep)
         {
-            db = applicationContext;
+            this.bookRep = bookRep;
         }
 
         //Контроллер начальной страницы
         public async Task<IActionResult> Index()
         {
-            var booksQuery = db.Books;
+            var booksQuery = bookRep.GetAll();
             //Возвращает новые книги
             var newBooks = await booksQuery.OrderBy(b => b.Id).Take(3).ToListAsync();
             //Возвращает популярные книги

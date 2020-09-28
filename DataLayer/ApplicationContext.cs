@@ -11,18 +11,6 @@ namespace Library.Models
     {
         private readonly ILogger<ApplicationContext> logger;
 
-        public DbSet<Book> Books { get; set; }
-
-        public DbSet<Reservation> Reservations { get; set; }
-
-        public DbSet<FileModel> Files { get; set; }
-
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<Evaluation> Evaluations { get; set; }
-
-        public DbSet<Tracking> Trackings { get; set; }
-
         public ApplicationContext(DbContextOptions<ApplicationContext> options, ILogger<ApplicationContext> logger)
             : base(options)
         {
