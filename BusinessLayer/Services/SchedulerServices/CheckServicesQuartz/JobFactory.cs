@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Library.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Spi;
 
@@ -21,7 +22,8 @@ namespace Library.Services.CheckServicesQuartz
         }
 
         public void ReturnJob(IJob job)
-        {
-        }
+       {
+          
+       }
     }
 }

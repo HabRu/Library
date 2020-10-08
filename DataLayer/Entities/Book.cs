@@ -23,7 +23,7 @@ namespace Library.Models
 
         public Evaluation Evaluation { get; set; }
 
-        public Reservation Reservation { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
 
         public Status Status { get; set; }
 
@@ -40,6 +40,7 @@ namespace Library.Models
             Description = "Нет описания";
             Comments = new List<Comment>();
             TrackingList = new List<Tracking>();
+            Reservations = new List<Reservation>();
             Image = "/images/NoImage.jpg";
         }
 
@@ -47,6 +48,7 @@ namespace Library.Models
         {
             Description = "Нет описания";
             Comments = new List<Comment>();
+            Reservations = new List<Reservation>();
             Evaluation = new Evaluation()
             {
                 Id = Id,

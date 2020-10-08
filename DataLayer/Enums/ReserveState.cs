@@ -3,7 +3,8 @@
     public enum ReserveState
     {
         Booked,
-        Passed
+        Passed,
+        Stored
     }
 
 }

@@ -14,9 +14,9 @@ namespace BusinessLayer.InrefacesRepository
         Task<TElement> GetByIdAsync(int? id);
         Task CreateAsync(TElement entity);
         Task UpdateAsync(TElement entity);
-        void Delete(int? id);
-        void Delete(TElement entity);
-        void DeleteRange(IEnumerable<TElement> entities);
+        Task DeleteAsync(int? id);
+        Task DeleteAsync(TElement entity);
+        Task DeleteRangeAsync(IEnumerable<TElement> entities);
         IQueryable<TElement> Include(params Expression<Func<TElement, object>>[] includeProperties);
         Task SaveChanges();
     }

@@ -27,19 +27,20 @@ namespace BusinessLayer.ImplementationsRepository
             await db.SaveChangesAsync();
         }
 
-        public async void Delete(int? id)
+        public async Task DeleteAsync(int? id)
         {
-            _dbSet.Remove(await GetByIdAsync(id));
+            var ent = _dbSet.FirstOrDefault(e => e.Id == id);
+            _dbSet.Remove(ent);
             await db.SaveChangesAsync();
         }
 
-        public async void Delete(TElement entity)
+        public async Task DeleteAsync(TElement entity)
         {
             _dbSet.Remove(entity);
-            await db.SaveChangesAsync();
+            await SaveChanges();
         }
 
-        public async void DeleteRange(IEnumerable<TElement> entities)
+        public async Task DeleteRangeAsync(IEnumerable<TElement> entities)
         {
             _dbSet.RemoveRange(entities);
             await db.SaveChangesAsync();

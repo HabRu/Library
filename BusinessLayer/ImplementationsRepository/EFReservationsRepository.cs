@@ -66,15 +66,16 @@ namespace Library.Services.ReservationControlServices
                 await emailService.SendEmailAsync(track.User.Email, "Книга доступна для бронирования", message.GetMessage(track.User.UserName, book.Title)); ;
             }
             //Удаляем подписчиков
-            trackRep.DeleteRange(trackings);
+            reservation = await resRep.GetByIdAsync(id);
+            await trackRep.DeleteRangeAsync(trackings);
             //Проверка того,что пользователь авторизован
             if (hasAccess || name == user.Email)
             {
                 //Удаление резирвации
                 book.Status = Status.Available;
-                resRep.Delete(reservation);
-                user.ReservUser.Remove(reservation);
+                reservation.State = ReserveState.Stored;
                 //Сохранение изменений
+                await resRep.SaveChanges();
                 await bookRep.SaveChanges();
             }
         }

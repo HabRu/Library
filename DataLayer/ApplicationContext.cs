@@ -28,10 +28,10 @@ namespace Library.Models
 
                 modelBuilder.Entity<Book>()
                     .Property(b => b.Id)
-                    .HasIdentityOptions(startValue: 5);
+                    .HasIdentityOptions(startValue: 6);
                 modelBuilder.Entity<Evaluation>()
                     .Property(e => e.Id)
-                    .HasIdentityOptions(startValue: 5);
+                    .HasIdentityOptions(startValue: 6);
 
                 modelBuilder.InitializeData();
             }

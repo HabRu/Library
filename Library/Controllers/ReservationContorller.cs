@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Library.Services.ReservationControlServices;
 using BusinessLayer.InrefacesRepository;
+using BusinessLayer.ViewModels;
+using System;
 
 namespace Library.Controllers
 {
@@ -29,7 +31,6 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> Refuse(int? id)
         {
-
             await reservationControl.DeleteReserv(id, User.Identity.Name, User.IsInRole(RolesConfig.LIBRARIAN));
 
             if (User.IsInRole(RolesConfig.LIBRARIAN))
@@ -43,7 +44,7 @@ namespace Library.Controllers
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> ListReserv()
         {
-            var reservations = reservRep.GetAll();
+            var reservations = reservRep.GetAll().Where(r => r.State != ReserveState.Stored);
             return View(await reservations.AsNoTracking().ToListAsync());
 
         }
@@ -52,9 +53,8 @@ namespace Library.Controllers
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         public async Task<IActionResult> Accept(int? id)
         {
-            var user = await userManager.GetUserAsync(User);
-            user.ReservUser.Add(await reservationControl.CreateReserv(id, user.Id, user.NameUser));
-             await reservRep.SaveChanges();
+            await reservationControl.AcceptReserv(id);
+            await reservRep.SaveChanges();
             return RedirectToAction("ListReserv");
         }
 
@@ -67,5 +67,13 @@ namespace Library.Controllers
             await reservRep.SaveChanges();
             return RedirectToAction("ListBook", "Book");
         }
+
+        [HttpGet]
+        [Authorize(Roles = RolesConfig.LIBRARIAN)]
+        public IActionResult GetReport()
+        {
+            return View();
+        }
+
     }
 }

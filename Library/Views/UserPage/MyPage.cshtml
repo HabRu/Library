@@ -43,6 +43,8 @@
         </tr>
         @foreach (Reservation u in Model.ReservUser)
         {
+            if (u.State != ReserveState.Stored)
+            {
             <tr>
                 <td>@u.Id</td>
                 <td>@u.UserId</td>
@@ -64,5 +66,6 @@
                 </td>
             </tr>
             }
+        }
         </table>
 </div>

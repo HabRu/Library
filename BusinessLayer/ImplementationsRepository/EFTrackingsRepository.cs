@@ -2,6 +2,7 @@
 using Library.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BusinessLayer.ImplementationsRepository
 {
@@ -24,10 +25,10 @@ namespace BusinessLayer.ImplementationsRepository
             await trackRep.CreateAsync(tracking);
         }
 
-        public  void Delete(int bookId, string userId)
+        public async Task Delete(int bookId, string userId)
         {
             var tracking = trackRep.GetAll().FirstOrDefault((t) => t.BookId == bookId && t.UserId == userId);
-            trackRep.Delete(tracking);
+            await trackRep.DeleteAsync(tracking);
         }
 
         public IEnumerable<Tracking> GetTrackingsByUserId(string userId)

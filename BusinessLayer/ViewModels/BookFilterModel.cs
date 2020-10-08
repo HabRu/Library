@@ -17,7 +17,7 @@ namespace Library.Models
         {
             Page = 1;
             SortOrder = SortState.TitleAsc;
-            PageSize = 3;
+            PageSize = 10;
         }
 
     }

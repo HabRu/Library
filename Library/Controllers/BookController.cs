@@ -52,9 +52,9 @@ namespace Library.Controllers
         //ДОСТУПНА ТОЛЬКО ДЛЯ РОЛИ "librarian"
         [Authorize(Roles = RolesConfig.LIBRARIAN)]
         [HttpGet]
-        public  IActionResult DeleteBook(int? id)
+        public async Task<IActionResult> DeleteBook(int? id)
         {
-            bookControl.DeleteBook(id);
+            await bookControl.DeleteBook(id);
             return RedirectToAction("ListBook");
         }
 
@@ -64,11 +64,12 @@ namespace Library.Controllers
         public IActionResult ListBook(BookFilterModel model)
         {
             var modelBooks = bookControl.ListBook(model);
-            if (User.Identity.IsAuthenticated) {
+            if (User.Identity.IsAuthenticated)
+            {
                 modelBooks.Trackings = trackings.GetTrackingsByUserId(userManager.GetUserId(User)).ToList();
                 ViewBag.userId = userManager.GetUserId(User);
             }
-            
+
             return View(modelBooks);
         }
 

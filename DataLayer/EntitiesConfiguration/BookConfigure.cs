@@ -9,8 +9,8 @@ namespace Library.Models.Configuration
         {
             builder.ToTable("Books").HasKey(b => b.Id);
             builder.Property(b => b.Id).IsRequired();
-            builder.Property(b => b.Title).IsRequired().HasMaxLength(50);
-            builder.Property(b => b.Authtor).IsRequired().HasMaxLength(50);
+            builder.Property(b => b.Title).IsRequired();
+            builder.Property(b => b.Authtor).IsRequired();
         }
     }
 }

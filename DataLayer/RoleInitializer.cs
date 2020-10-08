@@ -30,7 +30,7 @@ namespace Library
             }
             catch (Exception ex)
             {
-                var logger = services.GetRequiredService<ILogger>();
+                var logger = services.GetRequiredService<ILogger<RoleInitializerApp>>();
                 logger.LogError(ex, "An error occurred while seeding the database.");
             }
         }

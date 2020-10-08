@@ -7,7 +7,7 @@ namespace Library.Services.BookContorlServices
     public interface IBooksRepository
     {
         Task AddBook(AddBookViewModel model, string pathWeb);
-        void DeleteBook(int? id);
+        Task DeleteBook(int? id);
         AllListBookViewModel ListBook(BookFilterModel model);
         Task<BookViewModel> GetThisBook(int? id);
         Task AddComment(CommentViewModel comment, string NameUser);

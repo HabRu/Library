@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "GetList";
 }
+@if(User.IsInRole(RolesConfig.LIBRARIAN)){
+    <a asp-action="GetReport">Отчет</a>
+}
 <table class="table">
     <tr>
         <th>
@@ -33,7 +36,7 @@
             <td>@u.DataBooking.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm") </td>
             @if (u.State == ReserveState.Passed)
             {
-            <td>@u.DataSend.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm")</td>
+                <td>@u.DataSend.ToString("Год:yyyy Месяц:MM День:dd Час:hh Минуты:mm")</td>
             }
             else
             {
@@ -46,14 +49,14 @@
 
                     <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Убрать бронь</a></p>
                 }
-                else if(User.IsInRole(RolesConfig.LIBRARIAN))
+                else if (User.IsInRole(RolesConfig.LIBRARIAN))
                 {
-                <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Возврат книги</a></p>
+                    <p><a asp-controller="Reservation" asp-action="Refuse" asp-route-id="@u.Id">Возврат книги</a></p>
                 }
 
             </td>
 
-</tr>
+        </tr>
     }
 </table>
 

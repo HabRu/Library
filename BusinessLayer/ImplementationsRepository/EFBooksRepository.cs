@@ -42,11 +42,10 @@ namespace Library.Services.BookContorlServices
             if (model.Image != null)
             {
                 var path = configuration.GetValue<string>("ImagePath") + model.Image.FileName;
-                var contentPath = pathWeb + path;
-
-                if (!File.Exists(contentPath))
+                var localPath = pathWeb + path;
+                if (!File.Exists(localPath))
                 {
-                    using var fileStream = new FileStream(contentPath, FileMode.Create);
+                    using var fileStream = new FileStream(localPath, FileMode.Create);
                     await model.Image.CopyToAsync(fileStream);
                 }
 
@@ -88,9 +87,9 @@ namespace Library.Services.BookContorlServices
             await bookRep.UpdateAsync(book);
         }
 
-        public void DeleteBook(int? id)
+        public async Task DeleteBook(int? id)
         {
-            bookRep.Delete(id);
+            await bookRep.DeleteAsync(id);
         }
 
         public async void Edit(EditBookViewModel edit)

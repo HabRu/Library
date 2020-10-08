@@ -19,6 +19,12 @@ using Library.Services.ReservationControlServices;
 using BusinessLayer.InrefacesRepository;
 using BusinessLayer.ImplementationsRepository;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using BusinessLayer.Services.LibraryParser.Model;
+using BusinessLayer.Services.LibraryParser.Jobs;
+using BusinessLayer.Services.LibraryParser;
+using BusinessLayer.Services.LibraryParser.ParserInterfaces;
+using System.Collections.Generic;
+using Parser;
 
 namespace Library
 {
@@ -37,13 +43,18 @@ namespace Library
             services.AddTransient<Settings>();
             services.AddTransient<MessageForm>();
             services.AddHostedService<StartEmailService>();
+            services.AddHostedService<StartParserService>();
 
             //Передаем конфигурацию 'EmailServiceSettings' через IOptions
             services.Configure<Settings>(Configuration.GetSection("EmailServiceSettings"));
+            services.Configure<ParserSettings>(Configuration.GetSection("ParserServiceSettings"));
 
             // Add Quartz services
             services.AddSingleton<IJobFactory, JobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddTransient<IParser<IEnumerable<string>>, ListBooksParse>();
+            services.AddTransient<IParser<BookParserModel>, BookParser>();
 
             // Add our job
             services.AddSingleton<CheckJob>();
@@ -51,11 +62,16 @@ namespace Library
                 jobType: typeof(CheckJob),
                 cronExpression: $"0 0 0 1/{Configuration.GetValue<int>("EmailServiceSettings:RunInterval")} * ?"));
 
+            services.AddTransient<AddDataFromParserJob>();
+            services.AddSingleton(new ParserScheduler(
+                jobType: typeof(AddDataFromParserJob),
+                cronExpression: $"0 0/30 * 1/1 * ? *"));
+
 
             services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Library")));
 
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
 
@@ -68,10 +84,11 @@ namespace Library
 
             services.AddTransient<DbContext, ApplicationContext>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            
             services.AddTransient<IBooksRepository, EFBooksRepository>();
             services.AddTransient<IReservationRepository, EFReservationsRepository>();
             services.AddTransient<ITrackingsRepository, EFTrackingsRepository>();
-            
+
             services.AddMvc();
 
         }
