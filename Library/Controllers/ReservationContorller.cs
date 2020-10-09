@@ -9,6 +9,8 @@ using Library.Services.ReservationControlServices;
 using BusinessLayer.InrefacesRepository;
 using BusinessLayer.ViewModels;
 using System;
+using BusinessLayer.Services.GetReportService;
+using NPOI.POIFS.EventFileSystem;
 
 namespace Library.Controllers
 {
@@ -20,11 +22,14 @@ namespace Library.Controllers
 
         private readonly UserManager<User> userManager;
 
-        public ReservationController(IRepository<Reservation> reservRep, IReservationRepository reservationControl, UserManager<User> userManager)
+        private readonly IGetReportService getReportService;
+
+        public ReservationController(IRepository<Reservation> reservRep, IReservationRepository reservationControl, UserManager<User> userManager, IGetReportService getReportService)
         {
             this.reservRep = reservRep;
             this.reservationControl = reservationControl;
             this.userManager = userManager;
+            this.getReportService = getReportService;
         }
 
         //Get-контроллер. Отказ от резервации
@@ -75,5 +80,16 @@ namespace Library.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Authorize(Roles = RolesConfig.LIBRARIAN)]
+        public IActionResult GetReport(GetReportViewModel getReport)
+        {
+            var stream = getReportService.GetReportExcel(getReport);
+
+            var file_type = "application/vnd.ms-excel";
+            var file_name = "Отчет.xlsx";
+
+            return File(stream, file_type, file_name);
+        }
     }
 }

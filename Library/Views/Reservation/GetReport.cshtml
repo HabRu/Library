@@ -2,9 +2,11 @@
 @{
     ViewData["Title"] = "GetReport";
 }
-<from>
+<form method="post" asp-action="GetReport">
     <b>From</b>
-    <input type="date" asp-for="@Model.FromData"  />
-    <br/>
-    <input type="date" asp-for="@Model.ToData"  />
-</from>
+    <input type="date" asp-for="@Model.FromData" />
+    <br />
+    <b>To</b>
+    <input type="date" asp-for="@Model.ToData" />
+    <input type="submit" value="Получить" asp-action="GetReport">
+</form>

@@ -25,6 +25,7 @@ using BusinessLayer.Services.LibraryParser;
 using BusinessLayer.Services.LibraryParser.ParserInterfaces;
 using System.Collections.Generic;
 using Parser;
+using BusinessLayer.Services.GetReportService;
 
 namespace Library
 {
@@ -65,7 +66,7 @@ namespace Library
             services.AddTransient<AddDataFromParserJob>();
             services.AddSingleton(new ParserScheduler(
                 jobType: typeof(AddDataFromParserJob),
-                cronExpression: $"0 0/30 * 1/1 * ? *"));
+                cronExpression: $"0 0 21 1/1 * ? *"));
 
 
             services.AddAutoMapper(typeof(Startup));
@@ -84,7 +85,9 @@ namespace Library
 
             services.AddTransient<DbContext, ApplicationContext>();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
-            
+
+            services.AddTransient<IGetReportService, GetReportService>();
+
             services.AddTransient<IBooksRepository, EFBooksRepository>();
             services.AddTransient<IReservationRepository, EFReservationsRepository>();
             services.AddTransient<ITrackingsRepository, EFTrackingsRepository>();

@@ -19,6 +19,7 @@ namespace Parser
         {
             this.configuration = configuration;
         }
+
         public BookParserModel Parse(string href)
         {
             try
@@ -37,6 +38,7 @@ namespace Parser
                 var localDirectory = configuration.GetValue<string>("ImagePathParser");
                 var dbImagePath = configuration.GetValue<string>("ImagePath") + $"{title.Replace(" ", "")}.jpg";
                 var localFilename = localDirectory + $"{title.Replace(" ", "")}.jpg";
+
                 if (!File.Exists(localFilename))
                 {
                     using (WebClient client = new WebClient())
@@ -44,8 +46,9 @@ namespace Parser
                         client.DownloadFile(imagePath, localFilename);
                     }
                 }
-                Console.WriteLine($"{title}-{author}");
+
                 var book = new BookParserModel { Title = title, Authtor = author, Genre = genre, Language = language, Publisher = publisher, Image = dbImagePath, Year = year };
+
                 return book;
             }
             catch (Exception ex)
@@ -57,6 +60,7 @@ namespace Parser
         public async Task<BookParserModel> ParseAsync(string href)
         {
             var book = await Task.Run(() => Parse(href));
+
             return book;
         }
     }

@@ -43,6 +43,7 @@ namespace Library.Services.BookContorlServices
             {
                 var path = configuration.GetValue<string>("ImagePath") + model.Image.FileName;
                 var localPath = pathWeb + path;
+
                 if (!File.Exists(localPath))
                 {
                     using var fileStream = new FileStream(localPath, FileMode.Create);
@@ -72,6 +73,7 @@ namespace Library.Services.BookContorlServices
         {
             var book = await bookRep.GetByIdAsync(evaluation.BookId);
             var Evaluation = await evalRep.GetByIdAsync(evaluation.BookId);
+
             if (Evaluation.Average == 0)
             {
                 Evaluation.Average = evaluation.Score;
@@ -80,6 +82,7 @@ namespace Library.Services.BookContorlServices
             {
                 Evaluation.Average = (byte)((Evaluation.Average + evaluation.Score) / 2);
             }
+
             Evaluation.Users.Add(evaluation.user);
             Evaluation.Book = book;
             book.Evaluation = Evaluation;
@@ -109,12 +112,14 @@ namespace Library.Services.BookContorlServices
         {
             var book = await bookRep.GetByIdAsync(id);
             var editBookViewModel = mapper.Map<EditBookViewModel>(book);
+
             return editBookViewModel;
         }
 
         public async Task<BookViewModel> GetThisBook(int? id)
         {
             var book = await bookRep.Include(b => b.Comments, b => b.Evaluation).FirstOrDefaultAsync(b => b.Id == id);
+
             if (book.Evaluation.Users == null)
             {
                 book.Evaluation.Users = new List<string>();
@@ -127,6 +132,7 @@ namespace Library.Services.BookContorlServices
                 comment.OrderBy(c => c.Id);
                 book.Comments = comment;
             }
+
             return mapper.Map<BookViewModel>(book);
         }
 
@@ -149,6 +155,7 @@ namespace Library.Services.BookContorlServices
                 FilterViewModel = new FilterViewModel(model.Title, model.Language, model.Authtor, model.Genre, model.Publisher),
                 Books = items.ToList()
             };
+
             return viewModel;
         }
     }

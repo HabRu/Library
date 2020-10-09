@@ -42,7 +42,7 @@ namespace BusinessLayer.Services.LibraryParser.Jobs
             this.mapper = mapper;
             this.bookRep = bookRep;
             this.options = options.Value;
-            books = new List<Book>();
+            this.books = new List<Book>();
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -51,23 +51,29 @@ namespace BusinessLayer.Services.LibraryParser.Jobs
             {
                 var href = options.HrefBooks + i.ToString();
                 var listBookHref = (IEnumerable<string>)(await parserLists.ParseAsync(href));
+
                 foreach (var bookHref in listBookHref)
                 {
                     if (string.IsNullOrWhiteSpace(bookHref))
                         continue;
                     var hrefBook = options.Host + bookHref;
                     var bookModel = await parserBook.ParseAsync(hrefBook);
+
                     if (bookModel != null)
                     {
                         var book = mapper.Map<Book>(bookModel);
+
                         if (book != null)
                         {
                             await AddBookAsync(book);
                         }
+
                     }
+
                 }
+
             }
-           
+
         }
 
         public async Task AddBookAsync(Book bookModel)
@@ -79,8 +85,8 @@ namespace BusinessLayer.Services.LibraryParser.Jobs
 
                 if (hasBook == null)
                 {
-                   db.Set<Book>().Add(bookModel);
-                   await db.SaveChangesAsync();
+                    db.Set<Book>().Add(bookModel);
+                    await db.SaveChangesAsync();
                 }
             }
 
